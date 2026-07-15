@@ -1,0 +1,23 @@
+{
+  "name": "daytask",
+  "version": "0.2.0",
+  "description": "Calendar-first tasks for Obsidian without daily notes.",
+  "private": true,
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "tasks",
+    "calendar"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "builtin-modules": "^4.0.0",
+    "esbuild": "^0.28.1",
+    "obsidian": "latest",
+    "typescript": "^5.7.2"
+  }
+}
