@@ -1,55 +1,108 @@
 # DayTask
 
-Calendar-first tasks for Obsidian, without daily notes.
+[简体中文](README.zh-CN.md)
 
-DayTask gives you a self-contained calendar and task panel inside Obsidian. Select any date, add tasks, mark them complete, edit or move them, and delete them when they are no longer needed.
+**Calendar-first task planning in the Obsidian sidebar, without creating or modifying Markdown notes.**
 
-## What it does
+DayTask gives each day a focused task list beneath a compact monthly calendar. It is designed for people who want lightweight scheduling inside Obsidian but do not want task records mixed into daily notes or scattered across the vault.
 
-- Clean Calendar-style month view without task counts or markers
-- Tasks for any selected date
-- Add, complete, edit, reschedule, and delete tasks
-- Repeat daily, on weekdays, weekly, monthly, yearly, or at a custom interval
-- Pre-generate repeating occurrences for the coming year so they appear immediately
-- Optional start/end time range, priority, and notes for each task
-- Task dates come from the selected calendar day, with no separate date picker
-- Drag and drop tasks to save a custom order for each day
-- Modern time-range card with quick duration controls
-- Direct priority dots and recurrence buttons instead of dropdown menus
-- Labeled priority controls with subtle task background colors
-- Arrow-key calendar navigation that keeps focus after a mouse selection
-- Optional end date for custom recurrence
-- Automatic time-then-priority ordering until a day is manually reordered
-- Notes shown directly beneath each task
-- Keyboard calendar navigation with arrow keys and automatic month changes
-- Open automatically in the right sidebar when enabled
-- Delete tasks directly without an extra confirmation dialog
-- Monday- or Sunday-first calendar
-- Responsive layout for desktop and mobile
-- English and Chinese interface based on the Obsidian language
-- Local, per-vault storage with no account or cloud dependency
+## Highlights
 
-## Where the data lives
+- Compact calendar and task list in the right sidebar
+- No generated daily notes and no changes to existing Markdown files
+- Quick task capture for the selected calendar day
+- Optional start and end times with quick duration controls
+- Four priority levels shown with subtle task background colors
+- Notes displayed directly beneath each task
+- Recurrence: daily, weekdays, weekly, monthly, or a custom interval
+- Every recurrence is open-ended by default, with optional duration or end-date controls
+- Complete, reopen, edit, reorder, and delete tasks directly
+- Automatic ordering by time and then priority until a day is manually reordered
+- Arrow-key calendar navigation with automatic month changes
+- Monday-first or Sunday-first calendar
+- English and Simplified Chinese interface
+- Local, per-vault storage with no account, telemetry, or cloud service
 
-DayTask does **not** create daily Markdown notes. Obsidian stores all plugin data in one file:
+## How it works
+
+1. Enable DayTask. It opens automatically in the right sidebar.
+2. Select a date in the calendar.
+3. Type into the quick-add field, or use the details button for time, priority, recurrence, and notes.
+4. Check a task to complete it, drag the task card to reorder it, or use its edit and delete actions.
+
+The task date always comes from the selected calendar day, so there is no second date picker in the task editor.
+
+## Keyboard navigation
+
+After clicking a calendar date, use:
+
+- `Left` / `Right` to move one day
+- `Up` / `Down` to move one week
+- `Enter` or `Space` to activate a focused date
+
+Moving beyond the current month automatically changes the visible month.
+
+## Recurring tasks
+
+DayTask supports daily, weekday, weekly, monthly, and custom recurrence. Every recurring task can have an optional end date. Custom recurrence can repeat every chosen number of days, weeks, or months.
+
+The compact repeat-period row uses the selected calendar date as the fixed start. It defaults to **No end** and also offers one-, three-, and six-month durations. Choose **Custom date** only when you need an exact year, month, and day. The custom fields expand inline, so no system calendar popover covers the rest of the editor. A matching occurrence on the end date is included.
+
+Occurrences are generated ahead for the coming year and the horizon is extended whenever the plugin loads. Removing recurrence from an occurrence keeps that task and removes the other occurrences in the series.
+
+## Sorting and manual order
+
+Before a day is manually reordered, DayTask sorts tasks as follows:
+
+1. Tasks with a time range, ordered by start time
+2. Priority from high to low
+3. Tasks without a time range
+
+Dragging any part of a task card switches that day to a saved manual order.
+
+## Data storage
+
+DayTask does not create Markdown notes. Obsidian stores its data in:
 
 ```text
 <your-vault>/.obsidian/plugins/daytask/data.json
 ```
 
-Obsidian's official `Plugin.loadData()` and `Plugin.saveData()` APIs manage this file. To keep tasks available on another device, make sure your sync method includes the vault's `.obsidian` directory.
+The plugin uses Obsidian's `Plugin.loadData()` and `Plugin.saveData()` APIs. It does not read note contents, connect to the internet, collect analytics, or require an account. See [Privacy](PRIVACY.md) for details.
 
-## Repeating tasks
+If you use Obsidian on multiple devices, configure your sync solution to include the vault's `.obsidian` directory. Back up `data.json` if the task database is important to you.
 
-Use the settings button beside the quick-add button, or edit an existing task, to configure its repeat rule. DayTask creates occurrences through the coming year immediately, so a daily task appears on every date without waiting for the previous task to be completed. The horizon is extended whenever the plugin loads.
+## Installation
 
-## Install from source
+### Community plugins
 
-1. Install dependencies with `npm install`.
-2. Build with `npm run build`.
-3. Create `<your-vault>/.obsidian/plugins/daytask/`.
-4. Copy `main.js`, `manifest.json`, and `styles.css` into that folder.
-5. Reload Obsidian, enable community plugins, and enable DayTask.
+After DayTask is accepted into the Obsidian Community directory:
+
+1. Open **Settings → Community plugins → Browse**.
+2. Search for **DayTask**.
+3. Select **Install**, then **Enable**.
+
+### Manual installation
+
+1. Download `main.js`, `manifest.json`, and `styles.css` from the matching [GitHub release](https://github.com/PeanutUp/Obsidian-DayTask/releases).
+2. Create `<your-vault>/.obsidian/plugins/daytask/`.
+3. Place the three files directly inside that folder.
+4. Reload Obsidian and enable DayTask under **Community plugins**.
+
+### Build from source
+
+```bash
+npm install
+npm run build
+```
+
+Copy `main.js`, `manifest.json`, and `styles.css` into `<your-vault>/.obsidian/plugins/daytask/`, then reload Obsidian.
+
+## Compatibility
+
+- Obsidian 1.5.0 or newer
+- Desktop and mobile are declared supported
+- Drag-and-drop task reordering depends on the platform's drag support
 
 ## Development
 
@@ -58,8 +111,14 @@ npm install
 npm run dev
 ```
 
-Run `npm run build` before a release. A GitHub release for the Obsidian community directory should attach `main.js`, `manifest.json`, and `styles.css`, with a tag matching the manifest version.
+Use `npm run build` for a production build. Release tags must exactly match the version in `manifest.json` and must not include a `v` prefix. Attach `main.js`, `manifest.json`, and `styles.css` to every GitHub release.
 
-## Privacy
+## Support
 
-DayTask does not use the network, collect analytics, or read your notes. It only reads and writes its own plugin data through the Obsidian API.
+- Report bugs or request features in [GitHub Issues](https://github.com/PeanutUp/Obsidian-DayTask/issues).
+- For security-sensitive reports, follow [SECURITY.md](SECURITY.md).
+- See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+## License
+
+[MIT](LICENSE) © 2026 PeanutUp

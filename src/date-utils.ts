@@ -48,7 +48,11 @@ export function sameMonth(left: Date, right: Date): boolean {
   return left.getFullYear() === right.getFullYear() && left.getMonth() === right.getMonth();
 }
 
-function addMonthsClamped(date: Date, amount: number, preferredDay = date.getDate()): Date {
+export function addMonthsClamped(
+  date: Date,
+  amount: number,
+  preferredDay = date.getDate(),
+): Date {
   const targetMonth = new Date(date.getFullYear(), date.getMonth() + amount, 1);
   const lastDay = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0).getDate();
   return new Date(targetMonth.getFullYear(), targetMonth.getMonth(), Math.min(preferredDay, lastDay));

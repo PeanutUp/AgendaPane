@@ -489,7 +489,7 @@ export default class DayTaskPlugin extends Plugin {
       : isDateKey(fallbackAnchorDate)
         ? fallbackAnchorDate
         : undefined;
-    const untilDate = frequency === "custom" && isDateKey(rule.untilDate)
+    const untilDate = frequency !== "none" && isDateKey(rule.untilDate)
       ? rule.untilDate
       : undefined;
     return {

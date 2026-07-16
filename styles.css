@@ -309,44 +309,22 @@
   font-size: var(--font-ui-smaller);
 }
 
-.daytask-meta-item,
-.daytask-priority {
+.daytask-meta-item {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
 }
 
-.daytask-meta-icon,
-.daytask-notes-indicator {
+.daytask-meta-icon {
   display: inline-flex;
   width: 12px;
   height: 12px;
 }
 
-.daytask-meta-icon svg,
-.daytask-notes-indicator svg {
+.daytask-meta-icon svg {
   width: 12px;
   height: 12px;
-}
-
-.daytask-priority-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--text-faint);
-}
-
-.daytask-priority.is-low .daytask-priority-dot {
-  background: #e8c5cf;
-}
-
-.daytask-priority.is-medium .daytask-priority-dot {
-  background: #e9a9ba;
-}
-
-.daytask-priority.is-high .daytask-priority-dot {
-  background: #df829d;
 }
 
 .daytask-task-row.is-completed .daytask-task-title {
@@ -398,12 +376,6 @@
   font-weight: var(--font-semibold);
 }
 
-.daytask-empty-hint {
-  margin-top: 3px;
-  color: var(--text-faint);
-  font-size: var(--font-ui-smaller);
-}
-
 .daytask-modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -440,7 +412,7 @@
   border: 1px solid var(--background-modifier-border);
   border-radius: 16px;
   background: var(--background-primary);
-  box-shadow: none;
+  box-shadow: none !important;
   color: var(--text-muted);
   font-size: var(--font-ui-smaller);
 }
@@ -499,7 +471,7 @@
   border: 1px solid var(--background-modifier-border);
   border-radius: 15px;
   background: transparent;
-  box-shadow: none;
+  box-shadow: none !important;
   color: var(--text-muted);
   font-size: var(--font-ui-smaller);
 }
@@ -520,7 +492,7 @@
 .daytask-custom-recurrence {
   margin-top: 9px;
   padding: 10px;
-  border-left: 2px solid var(--interactive-accent);
+  border-radius: 10px;
   background: var(--background-secondary-alt);
 }
 
@@ -542,30 +514,137 @@
   text-align: center;
 }
 
-.daytask-custom-until {
+.daytask-recurrence-period {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid var(--background-modifier-border);
 }
 
-.daytask-custom-until label {
+.daytask-recurrence-period-header,
+.daytask-recurrence-period-heading {
   display: flex;
   align-items: center;
+}
+
+.daytask-recurrence-period-header {
   justify-content: space-between;
-  gap: 12px;
-  color: var(--text-muted);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.daytask-recurrence-period-heading {
+  gap: 7px;
+  color: var(--text-normal);
   font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
 }
 
-.daytask-custom-until input[type="date"] {
-  width: 160px;
-  height: 32px;
+.daytask-recurrence-period-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
 }
 
-.daytask-custom-hint {
-  margin-top: 6px;
-  color: var(--text-faint);
+.daytask-recurrence-period-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daytask-recurrence-start-summary {
+  overflow: hidden;
+  color: var(--text-muted);
   font-size: var(--font-ui-smaller);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daytask-recurrence-period-options {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.daytask-recurrence-period-option {
+  min-width: 0;
+  height: 29px;
+  padding: 2px 6px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none !important;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daytask-recurrence-period-option:hover {
+  border-color: var(--interactive-accent);
+  color: var(--interactive-accent);
+}
+
+.daytask-recurrence-period-option.is-selected {
+  border-color: color-mix(in srgb, var(--interactive-accent) 45%, var(--background-modifier-border));
+  background: color-mix(in srgb, var(--interactive-accent) 9%, transparent);
+  color: var(--interactive-accent);
+  font-weight: var(--font-medium);
+}
+
+.daytask-recurrence-custom-date {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary-alt);
+}
+
+.daytask-recurrence-custom-date:focus-within {
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 12%, transparent);
+}
+
+.daytask-recurrence-custom-date.is-invalid {
+  border-color: var(--text-error);
+}
+
+.daytask-recurrence-custom-date-label {
+  margin-right: auto;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-recurrence-date-part {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-recurrence-date-part input {
+  width: 38px;
+  height: 25px;
+  padding: 1px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none !important;
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.daytask-recurrence-date-part:first-of-type input {
+  width: 52px;
 }
 
 .daytask-time-section {
@@ -599,7 +678,7 @@
   padding: 2px 8px;
   border: 0;
   background: transparent;
-  box-shadow: none;
+  box-shadow: none !important;
   color: var(--text-muted);
   font-size: var(--font-ui-smaller);
 }
@@ -691,7 +770,7 @@
   border: 1px solid var(--background-modifier-border);
   border-radius: 14px;
   background: var(--background-primary);
-  box-shadow: none;
+  box-shadow: none !important;
   color: var(--text-muted);
   font-size: var(--font-ui-smaller);
 }
@@ -699,12 +778,6 @@
 .daytask-time-preset:hover {
   border-color: var(--interactive-accent);
   color: var(--interactive-accent);
-}
-
-.daytask-time-hint {
-  margin-top: 8px;
-  color: var(--text-faint);
-  font-size: var(--font-ui-smaller);
 }
 
 .daytask-time-error {

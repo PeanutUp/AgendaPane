@@ -9,7 +9,6 @@ export interface DayTaskStrings {
   addTask: string;
   advancedAdd: string;
   noTasks: string;
-  noTasksHint: string;
   editTask: string;
   deleteTask: string;
   cancel: string;
@@ -19,7 +18,6 @@ export interface DayTaskStrings {
   taskTime: string;
   startTime: string;
   endTime: string;
-  timeRangeHint: string;
   timeRangeInvalid: string;
   clearTime: string;
   duration30: string;
@@ -41,8 +39,17 @@ export interface DayTaskStrings {
   recurrenceYearly: string;
   recurrenceCustom: string;
   recurrenceEvery: string;
+  recurrencePeriod: string;
+  recurrenceStarts: string;
   recurrenceUntil: string;
-  recurrenceUntilHint: string;
+  recurrenceNoEnd: string;
+  recurrenceOneMonth: string;
+  recurrenceThreeMonths: string;
+  recurrenceSixMonths: string;
+  recurrenceCustomDate: string;
+  dateYear: string;
+  dateMonth: string;
+  dateDay: string;
   recurrenceUntilInvalid: string;
   unitDay: string;
   unitWeek: string;
@@ -67,7 +74,6 @@ const EN: DayTaskStrings = {
   addTask: "Add task",
   advancedAdd: "Add with details",
   noTasks: "Nothing planned",
-  noTasksHint: "Add a task for this day when you are ready.",
   editTask: "Edit task",
   deleteTask: "Delete task",
   cancel: "Cancel",
@@ -77,7 +83,6 @@ const EN: DayTaskStrings = {
   taskTime: "Time",
   startTime: "Start",
   endTime: "End",
-  timeRangeHint: "Set both times, for example 19:00–20:00.",
   timeRangeInvalid: "Set a complete time range with an end time after the start time.",
   clearTime: "Clear",
   duration30: "+30 min",
@@ -99,9 +104,18 @@ const EN: DayTaskStrings = {
   recurrenceYearly: "Yearly",
   recurrenceCustom: "Custom…",
   recurrenceEvery: "Repeat every",
+  recurrencePeriod: "Repeat period",
+  recurrenceStarts: "Starts",
   recurrenceUntil: "Ends on",
-  recurrenceUntilHint: "Leave empty to keep extending the series.",
-  recurrenceUntilInvalid: "The end date cannot be earlier than this task.",
+  recurrenceNoEnd: "No end",
+  recurrenceOneMonth: "1 month",
+  recurrenceThreeMonths: "3 months",
+  recurrenceSixMonths: "6 months",
+  recurrenceCustomDate: "Custom date",
+  dateYear: "Year",
+  dateMonth: "Month",
+  dateDay: "Day",
+  recurrenceUntilInvalid: "The end date cannot be earlier than the start date.",
   unitDay: "day(s)",
   unitWeek: "week(s)",
   unitMonth: "month(s)",
@@ -125,7 +139,6 @@ const ZH: DayTaskStrings = {
   addTask: "添加任务",
   advancedAdd: "添加详细任务",
   noTasks: "这一天还没有安排",
-  noTasksHint: "准备好后，可以在上方添加任务。",
   editTask: "编辑任务",
   deleteTask: "删除任务",
   cancel: "取消",
@@ -135,7 +148,6 @@ const ZH: DayTaskStrings = {
   taskTime: "时间",
   startTime: "开始时间",
   endTime: "结束时间",
-  timeRangeHint: "请同时设置开始和结束时间，例如 19:00–20:00。",
   timeRangeInvalid: "请填写完整时间段，并确保结束时间晚于开始时间。",
   clearTime: "清空",
   duration30: "+30 分钟",
@@ -157,9 +169,18 @@ const ZH: DayTaskStrings = {
   recurrenceYearly: "每年",
   recurrenceCustom: "自定义…",
   recurrenceEvery: "每隔",
+  recurrencePeriod: "循环期限",
+  recurrenceStarts: "开始",
   recurrenceUntil: "循环截止",
-  recurrenceUntilHint: "留空则持续循环并自动延长。",
-  recurrenceUntilInvalid: "截止日期不能早于当前任务日期。",
+  recurrenceNoEnd: "不设截止",
+  recurrenceOneMonth: "1 个月",
+  recurrenceThreeMonths: "3 个月",
+  recurrenceSixMonths: "6 个月",
+  recurrenceCustomDate: "自定义日期",
+  dateYear: "年",
+  dateMonth: "月",
+  dateDay: "日",
+  recurrenceUntilInvalid: "截止日期不能早于开始日期。",
   unitDay: "天",
   unitWeek: "周",
   unitMonth: "个月",

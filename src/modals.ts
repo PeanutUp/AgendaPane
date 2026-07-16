@@ -1,4 +1,5 @@
 import { App, Modal, Setting, setIcon } from "obsidian";
+import { addMonthsClamped, formatDateKey, isDateKey, parseDateKey } from "./date-utils";
 import { DayTaskStrings } from "./i18n";
 import {
   RecurrenceFrequency,
@@ -11,6 +12,8 @@ export class TaskModal extends Modal {
   private readonly draft: TaskDraft;
   private timeErrorEl: HTMLElement | null = null;
   private recurrenceErrorEl: HTMLElement | null = null;
+  private customRecurrenceEndActive = false;
+  private customRecurrenceEndValid = true;
 
   constructor(
     app: App,
@@ -79,8 +82,12 @@ export class TaskModal extends Modal {
       this.timeErrorEl?.removeClass("daytask-hidden");
       return;
     }
+    if (this.customRecurrenceEndActive && !this.customRecurrenceEndValid) {
+      this.recurrenceErrorEl?.removeClass("daytask-hidden");
+      return;
+    }
     if (
-      this.draft.recurrence.frequency === "custom" &&
+      this.draft.recurrence.frequency !== "none" &&
       this.draft.recurrence.untilDate &&
       this.draft.recurrence.untilDate < this.draft.date
     ) {
@@ -132,6 +139,7 @@ export class TaskModal extends Modal {
     section.createDiv({ cls: "daytask-choice-heading", text: this.strings.recurrence });
     const group = section.createDiv({ cls: "daytask-recurrence-picker" });
     const customPanel = section.createDiv({ cls: "daytask-custom-recurrence" });
+    const periodPanel = section.createDiv({ cls: "daytask-recurrence-period" });
     const choices: Array<{ value: RecurrenceFrequency; label: string }> = [
       { value: "none", label: this.strings.recurrenceNone },
       { value: "daily", label: this.strings.recurrenceDaily },
@@ -141,8 +149,9 @@ export class TaskModal extends Modal {
       { value: "custom", label: this.strings.recurrenceCustom },
     ];
 
-    const updateCustomPanel = (): void => {
+    const updatePanels = (): void => {
       customPanel.toggleClass("daytask-hidden", this.draft.recurrence.frequency !== "custom");
+      periodPanel.toggleClass("daytask-hidden", this.draft.recurrence.frequency === "none");
     };
 
     for (const choice of choices) {
@@ -158,12 +167,13 @@ export class TaskModal extends Modal {
       button.toggleClass("is-selected", this.draft.recurrence.frequency === choice.value);
       button.addEventListener("click", () => {
         this.draft.recurrence.frequency = choice.value;
-        if (choice.value !== "custom") delete this.draft.recurrence.untilDate;
         if (choice.value === "custom" && this.draft.recurrence.unit === "year") {
           this.draft.recurrence.unit = "day";
         }
         this.updateChoiceSelection(group, choice.value);
-        updateCustomPanel();
+        updatePanels();
+        if (choice.value === "none") setPeriodMode("none");
+        else refreshPeriodSelection();
       });
     }
 
@@ -199,24 +209,145 @@ export class TaskModal extends Modal {
       });
     }
 
-    const untilRow = customPanel.createDiv({ cls: "daytask-custom-until" });
-    const untilLabel = untilRow.createEl("label");
-    untilLabel.createSpan({ text: this.strings.recurrenceUntil });
-    const untilInput = untilLabel.createEl("input", {
-      attr: { type: "date", min: this.draft.date },
+    const periodHeader = periodPanel.createDiv({ cls: "daytask-recurrence-period-header" });
+    const periodHeading = periodHeader.createDiv({ cls: "daytask-recurrence-period-heading" });
+    const periodIcon = periodHeading.createSpan({ cls: "daytask-recurrence-period-icon" });
+    setIcon(periodIcon, "calendar-range");
+    periodHeading.createSpan({ text: this.strings.recurrencePeriod });
+    periodHeader.createSpan({
+      cls: "daytask-recurrence-start-summary",
+      text: `${this.strings.recurrenceStarts} ${new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }).format(parseDateKey(this.draft.date))}`,
+      attr: { title: this.draft.date },
     });
-    untilInput.value = this.draft.recurrence.untilDate ?? "";
-    untilInput.addEventListener("input", () => {
-      if (untilInput.value) this.draft.recurrence.untilDate = untilInput.value;
+
+    type PeriodMode = "none" | "one" | "three" | "six" | "custom";
+    const startDate = parseDateKey(this.draft.date);
+    const presetDates: Record<Exclude<PeriodMode, "none" | "custom">, string> = {
+      one: formatDateKey(addMonthsClamped(startDate, 1)),
+      three: formatDateKey(addMonthsClamped(startDate, 3)),
+      six: formatDateKey(addMonthsClamped(startDate, 6)),
+    };
+    const existingUntil = this.draft.recurrence.untilDate;
+    let periodMode: PeriodMode = !existingUntil
+      ? "none"
+      : existingUntil === presetDates.one
+        ? "one"
+        : existingUntil === presetDates.three
+          ? "three"
+          : existingUntil === presetDates.six
+            ? "six"
+            : "custom";
+
+    const optionRow = periodPanel.createDiv({ cls: "daytask-recurrence-period-options" });
+    const optionButtons = new Map<PeriodMode, HTMLButtonElement>();
+    [
+      { mode: "none" as const, label: this.strings.recurrenceNoEnd },
+      { mode: "one" as const, label: this.strings.recurrenceOneMonth },
+      { mode: "three" as const, label: this.strings.recurrenceThreeMonths },
+      { mode: "six" as const, label: this.strings.recurrenceSixMonths },
+      { mode: "custom" as const, label: this.strings.recurrenceCustomDate },
+    ].forEach(({ mode, label }) => {
+      const button = optionRow.createEl("button", {
+        cls: "daytask-recurrence-period-option",
+        text: label,
+        attr: { type: "button" },
+      });
+      optionButtons.set(mode, button);
+    });
+
+    const customDate = periodPanel.createDiv({ cls: "daytask-recurrence-custom-date" });
+    customDate.createSpan({
+      cls: "daytask-recurrence-custom-date-label",
+      text: this.strings.recurrenceUntil,
+    });
+    const initialCustomDate = existingUntil ?? presetDates.one;
+    const initialParts = initialCustomDate.split("-");
+    const createDatePart = (
+      value: string,
+      label: string,
+      length: number,
+    ): HTMLInputElement => {
+      const field = customDate.createEl("label", { cls: "daytask-recurrence-date-part" });
+      const input = field.createEl("input", {
+        attr: {
+          type: "text",
+          inputmode: "numeric",
+          maxlength: String(length),
+          "aria-label": label,
+        },
+      });
+      input.value = value;
+      field.createSpan({ text: label });
+      return input;
+    };
+    const yearInput = createDatePart(initialParts[0], this.strings.dateYear, 4);
+    const monthInput = createDatePart(initialParts[1], this.strings.dateMonth, 2);
+    const dayInput = createDatePart(initialParts[2], this.strings.dateDay, 2);
+
+    const setCustomDateInputs = (date: string): void => {
+      const [year, month, day] = date.split("-");
+      yearInput.value = year;
+      monthInput.value = month;
+      dayInput.value = day;
+    };
+
+    const updateCustomDate = (): void => {
+      const candidate = `${yearInput.value.padStart(4, "0")}-${monthInput.value.padStart(2, "0")}-${dayInput.value.padStart(2, "0")}`;
+      const valid = isDateKey(candidate) && candidate >= this.draft.date;
+      this.customRecurrenceEndActive = true;
+      this.customRecurrenceEndValid = valid;
+      if (valid) this.draft.recurrence.untilDate = candidate;
       else delete this.draft.recurrence.untilDate;
+      customDate.toggleClass("is-invalid", !valid);
       this.recurrenceErrorEl?.addClass("daytask-hidden");
+    };
+
+    const refreshPeriodSelection = (): void => {
+      optionButtons.forEach((button, mode) => {
+        const selected = mode === periodMode;
+        button.toggleClass("is-selected", selected);
+        button.setAttr("aria-pressed", String(selected));
+      });
+      customDate.toggleClass("daytask-hidden", periodMode !== "custom");
+    };
+
+    const setPeriodMode = (mode: PeriodMode): void => {
+      periodMode = mode;
+      this.customRecurrenceEndActive = mode === "custom";
+      this.customRecurrenceEndValid = true;
+      if (mode === "none") delete this.draft.recurrence.untilDate;
+      else if (mode === "custom") {
+        setCustomDateInputs(this.draft.recurrence.untilDate ?? presetDates.one);
+        updateCustomDate();
+      }
+      else this.draft.recurrence.untilDate = presetDates[mode];
+      this.recurrenceErrorEl?.addClass("daytask-hidden");
+      refreshPeriodSelection();
+    };
+
+    optionButtons.forEach((button, mode) => {
+      button.addEventListener("click", () => setPeriodMode(mode));
     });
-    untilRow.createDiv({ cls: "daytask-custom-hint", text: this.strings.recurrenceUntilHint });
-    this.recurrenceErrorEl = untilRow.createDiv({
+    [yearInput, monthInput, dayInput].forEach((input) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "");
+        periodMode = "custom";
+        updateCustomDate();
+        refreshPeriodSelection();
+      });
+    });
+    this.recurrenceErrorEl = periodPanel.createDiv({
       cls: "daytask-time-error daytask-hidden",
       text: this.strings.recurrenceUntilInvalid,
     });
-    updateCustomPanel();
+    this.customRecurrenceEndActive = periodMode === "custom";
+    this.customRecurrenceEndValid = true;
+    updatePanels();
+    refreshPeriodSelection();
   }
 
   private updateChoiceSelection(group: HTMLElement, value: string): void {
@@ -296,7 +427,6 @@ export class TaskModal extends Modal {
       });
     });
 
-    section.createDiv({ cls: "daytask-time-hint", text: this.strings.timeRangeHint });
     this.timeErrorEl = section.createDiv({
       cls: "daytask-time-error daytask-hidden",
       text: this.strings.timeRangeInvalid,

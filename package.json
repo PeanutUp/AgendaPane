@@ -1,7 +1,7 @@
 {
   "name": "daytask",
-  "version": "0.5.3",
-  "description": "Calendar-first tasks for Obsidian without daily notes.",
+  "version": "1.0.0",
+  "description": "Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.",
   "private": true,
   "scripts": {
     "dev": "node esbuild.config.mjs",

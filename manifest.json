@@ -1,9 +1,10 @@
 {
   "id": "daytask",
   "name": "DayTask",
-  "version": "0.5.3",
+  "version": "1.0.0",
   "minAppVersion": "1.5.0",
-  "description": "Plan tasks by date in a calendar without creating daily notes.",
-  "author": "DayTask contributors",
+  "description": "Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.",
+  "author": "PeanutUp",
+  "authorUrl": "https://github.com/PeanutUp",
   "isDesktopOnly": false
 }

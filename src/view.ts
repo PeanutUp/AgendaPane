@@ -9,7 +9,7 @@ import {
   sameMonth,
 } from "./date-utils";
 import { getStrings } from "./i18n";
-import type { DayTaskItem, TaskPriority } from "./types";
+import type { DayTaskItem } from "./types";
 
 export const VIEW_TYPE_DAYTASK = "daytask-calendar-view";
 
@@ -214,7 +214,6 @@ export class DayTaskView extends ItemView {
       const icon = empty.createDiv({ cls: "daytask-empty-icon" });
       setIcon(icon, "calendar-days");
       empty.createDiv({ cls: "daytask-empty-title", text: strings.noTasks });
-      empty.createDiv({ cls: "daytask-empty-hint", text: strings.noTasksHint });
       return;
     }
 
@@ -304,29 +303,9 @@ export class DayTaskView extends ItemView {
   }
 
   private renderTaskMeta(parent: HTMLElement, task: DayTaskItem): void {
-    if (
-      !task.startTime &&
-      !task.endTime &&
-      task.priority === "none"
-    ) {
-      return;
-    }
+    if (!task.startTime && !task.endTime) return;
 
-    const strings = getStrings();
     const meta = parent.createDiv({ cls: "daytask-task-meta" });
-    if (task.priority !== "none") {
-      const priorityLabels: Record<Exclude<TaskPriority, "none">, string> = {
-        low: strings.priorityLow,
-        medium: strings.priorityMedium,
-        high: strings.priorityHigh,
-      };
-      const priority = meta.createSpan({
-        cls: `daytask-priority is-${task.priority}`,
-        attr: { title: `${strings.priority}: ${priorityLabels[task.priority]}` },
-      });
-      priority.createSpan({ cls: "daytask-priority-dot" });
-      priority.createSpan({ text: priorityLabels[task.priority] });
-    }
     if (task.startTime || task.endTime) {
       const label =
         task.startTime && task.endTime
