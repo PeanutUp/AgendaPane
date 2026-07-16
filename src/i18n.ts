@@ -17,6 +17,14 @@ export interface DayTaskStrings {
   taskTitle: string;
   taskDate: string;
   taskTime: string;
+  startTime: string;
+  endTime: string;
+  timeRangeHint: string;
+  timeRangeInvalid: string;
+  clearTime: string;
+  duration30: string;
+  duration60: string;
+  duration120: string;
   taskNotes: string;
   taskNotesPlaceholder: string;
   priority: string;
@@ -33,20 +41,19 @@ export interface DayTaskStrings {
   recurrenceYearly: string;
   recurrenceCustom: string;
   recurrenceEvery: string;
+  recurrenceUntil: string;
+  recurrenceUntilHint: string;
+  recurrenceUntilInvalid: string;
   unitDay: string;
   unitWeek: string;
   unitMonth: string;
   unitYear: string;
   createTask: string;
-  confirmDeleteTitle: string;
-  confirmDeleteMessage: string;
-  delete: string;
   settingsWeekStart: string;
   settingsWeekStartDesc: string;
-  settingsConfirmDelete: string;
-  settingsConfirmDeleteDesc: string;
   incomplete: string;
   complete: string;
+  reorderTask: string;
 }
 
 const EN: DayTaskStrings = {
@@ -68,6 +75,14 @@ const EN: DayTaskStrings = {
   taskTitle: "Task",
   taskDate: "Date",
   taskTime: "Time",
+  startTime: "Start",
+  endTime: "End",
+  timeRangeHint: "Set both times, for example 19:00–20:00.",
+  timeRangeInvalid: "Set a complete time range with an end time after the start time.",
+  clearTime: "Clear",
+  duration30: "+30 min",
+  duration60: "+1 hour",
+  duration120: "+2 hours",
   taskNotes: "Notes",
   taskNotesPlaceholder: "Optional details…",
   priority: "Priority",
@@ -84,20 +99,19 @@ const EN: DayTaskStrings = {
   recurrenceYearly: "Yearly",
   recurrenceCustom: "Custom…",
   recurrenceEvery: "Repeat every",
+  recurrenceUntil: "Ends on",
+  recurrenceUntilHint: "Leave empty to keep extending the series.",
+  recurrenceUntilInvalid: "The end date cannot be earlier than this task.",
   unitDay: "day(s)",
   unitWeek: "week(s)",
   unitMonth: "month(s)",
   unitYear: "year(s)",
   createTask: "Create task",
-  confirmDeleteTitle: "Delete task?",
-  confirmDeleteMessage: "This task will be permanently removed from DayTask data.",
-  delete: "Delete",
   settingsWeekStart: "Start week on Monday",
   settingsWeekStartDesc: "Show Monday as the first day in the calendar.",
-  settingsConfirmDelete: "Confirm before deleting",
-  settingsConfirmDeleteDesc: "Ask for confirmation before permanently deleting a task.",
   incomplete: "Mark incomplete",
   complete: "Mark complete",
+  reorderTask: "Drag to reorder",
 };
 
 const ZH: DayTaskStrings = {
@@ -119,6 +133,14 @@ const ZH: DayTaskStrings = {
   taskTitle: "任务",
   taskDate: "日期",
   taskTime: "时间",
+  startTime: "开始时间",
+  endTime: "结束时间",
+  timeRangeHint: "请同时设置开始和结束时间，例如 19:00–20:00。",
+  timeRangeInvalid: "请填写完整时间段，并确保结束时间晚于开始时间。",
+  clearTime: "清空",
+  duration30: "+30 分钟",
+  duration60: "+1 小时",
+  duration120: "+2 小时",
   taskNotes: "备注",
   taskNotesPlaceholder: "可选的详细说明…",
   priority: "优先级",
@@ -135,20 +157,19 @@ const ZH: DayTaskStrings = {
   recurrenceYearly: "每年",
   recurrenceCustom: "自定义…",
   recurrenceEvery: "每隔",
+  recurrenceUntil: "循环截止",
+  recurrenceUntilHint: "留空则持续循环并自动延长。",
+  recurrenceUntilInvalid: "截止日期不能早于当前任务日期。",
   unitDay: "天",
   unitWeek: "周",
   unitMonth: "个月",
   unitYear: "年",
   createTask: "新建任务",
-  confirmDeleteTitle: "删除任务？",
-  confirmDeleteMessage: "该任务将从 DayTask 数据中永久删除。",
-  delete: "删除",
   settingsWeekStart: "每周从星期一开始",
   settingsWeekStartDesc: "将星期一显示为日历的第一天。",
-  settingsConfirmDelete: "删除前确认",
-  settingsConfirmDeleteDesc: "永久删除任务前先显示确认提示。",
   incomplete: "标记为未完成",
   complete: "标记为已完成",
+  reorderTask: "拖动调整顺序",
 };
 
 export function getStrings(): DayTaskStrings {

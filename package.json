@@ -1,6 +1,6 @@
 {
   "name": "daytask",
-  "version": "0.2.0",
+  "version": "0.5.3",
   "description": "Calendar-first tasks for Obsidian without daily notes.",
   "private": true,
   "scripts": {

@@ -6,12 +6,24 @@ DayTask gives you a self-contained calendar and task panel inside Obsidian. Sele
 
 ## What it does
 
-- Month calendar with task counts
+- Clean Calendar-style month view without task counts or markers
 - Tasks for any selected date
 - Add, complete, edit, reschedule, and delete tasks
 - Repeat daily, on weekdays, weekly, monthly, yearly, or at a custom interval
-- Automatically create the next occurrence when a repeating task is completed
-- Optional time, priority, and notes for each task
+- Pre-generate repeating occurrences for the coming year so they appear immediately
+- Optional start/end time range, priority, and notes for each task
+- Task dates come from the selected calendar day, with no separate date picker
+- Drag and drop tasks to save a custom order for each day
+- Modern time-range card with quick duration controls
+- Direct priority dots and recurrence buttons instead of dropdown menus
+- Labeled priority controls with subtle task background colors
+- Arrow-key calendar navigation that keeps focus after a mouse selection
+- Optional end date for custom recurrence
+- Automatic time-then-priority ordering until a day is manually reordered
+- Notes shown directly beneath each task
+- Keyboard calendar navigation with arrow keys and automatic month changes
+- Open automatically in the right sidebar when enabled
+- Delete tasks directly without an extra confirmation dialog
 - Monday- or Sunday-first calendar
 - Responsive layout for desktop and mobile
 - English and Chinese interface based on the Obsidian language
@@ -29,7 +41,7 @@ Obsidian's official `Plugin.loadData()` and `Plugin.saveData()` APIs manage this
 
 ## Repeating tasks
 
-Use the sliders button beside the quick-add button, or edit an existing task, to configure its repeat rule. When you complete a repeating task, DayTask keeps that completed occurrence and creates the next one. Each occurrence is generated once, so unchecking and rechecking a task does not create duplicates.
+Use the settings button beside the quick-add button, or edit an existing task, to configure its repeat rule. DayTask creates occurrences through the coming year immediately, so a daily task appears on every date without waiting for the previous task to be completed. The horizon is extended whenever the plugin loads.
 
 ## Install from source
 
@@ -51,7 +63,3 @@ Run `npm run build` before a release. A GitHub release for the Obsidian communit
 ## Privacy
 
 DayTask does not use the network, collect analytics, or read your notes. It only reads and writes its own plugin data through the Obsidian API.
-
-## License
-
-MIT

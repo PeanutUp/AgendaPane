@@ -39,7 +39,9 @@ export function getCalendarDates(month: Date, mondayFirst: boolean): Date[] {
   const weekday = first.getDay();
   const daysBefore = mondayFirst ? (weekday + 6) % 7 : weekday;
   const start = addDays(first, -daysBefore);
-  return Array.from({ length: 42 }, (_, index) => addDays(start, index));
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const visibleDays = Math.ceil((daysBefore + daysInMonth) / 7) * 7;
+  return Array.from({ length: visibleDays }, (_, index) => addDays(start, index));
 }
 
 export function sameMonth(left: Date, right: Date): boolean {

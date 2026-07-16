@@ -1,18 +1,15 @@
 .daytask-view {
-  --daytask-radius: 12px;
-  --daytask-gap: 16px;
+  --daytask-cell-height: 30px;
   background: var(--background-primary);
   padding: 0 !important;
   overflow: auto;
 }
 
 .daytask-shell {
-  width: min(100%, 760px);
-  margin: 0 auto;
-  padding: clamp(16px, 3vw, 32px);
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 6px 7px 16px;
 }
 
 .daytask-calendar,
@@ -20,65 +17,92 @@
   min-width: 0;
 }
 
-.daytask-calendar-header {
-  display: grid;
-  grid-template-columns: 36px 1fr 36px;
-  align-items: center;
-  gap: 8px;
+.daytask-calendar {
+  padding: 0 3px;
 }
 
-.daytask-month-label {
-  margin: 0;
+.daytask-calendar-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  margin-bottom: 3px;
+}
+
+.daytask-calendar-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
   color: var(--text-normal);
-  font-size: 1.15rem;
-  font-weight: 650;
-  text-align: center;
+}
+
+.daytask-calendar-month,
+.daytask-calendar-year {
+  font-size: 1.25rem;
+  font-weight: var(--font-bold);
+  line-height: 1;
+}
+
+.daytask-calendar-year {
+  color: var(--interactive-accent);
+}
+
+.daytask-calendar-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.daytask-header-today {
+  height: 28px;
+  padding: 2px 7px;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-header-today:hover {
+  background: transparent !important;
+  color: var(--interactive-accent);
 }
 
 .daytask-icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   padding: 6px;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   color: var(--text-muted);
 }
 
 .daytask-icon-button:hover {
-  color: var(--text-normal);
-  background: var(--background-modifier-hover);
-}
-
-.daytask-today-button {
-  display: block;
-  margin: 8px auto 12px;
-  padding: 3px 10px;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
   color: var(--interactive-accent);
-  font-size: var(--font-ui-smaller);
-}
-
-.daytask-today-button:hover {
-  background: var(--background-modifier-hover);
+  background: transparent !important;
 }
 
 .daytask-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(30px, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+  width: 100%;
 }
 
 .daytask-weekday {
-  padding: 4px 0 8px;
-  color: var(--text-faint);
-  font-size: var(--font-ui-smaller);
+  height: 22px;
+  padding: 4px 0;
+  color: var(--text-muted);
+  font-size: 0.65em;
   font-weight: var(--font-semibold);
+  letter-spacing: 0;
+  line-height: 14px;
   text-align: center;
   text-transform: uppercase;
 }
@@ -88,30 +112,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   min-width: 0;
-  aspect-ratio: 1;
+  height: 28px;
   padding: 0;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  box-shadow: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  appearance: none;
   color: var(--text-normal);
-  font-size: var(--font-ui-small);
+  font-size: 0.8em;
+  transition: background-color 100ms ease, color 100ms ease;
 }
 
 .daytask-day:hover {
-  border-color: var(--background-modifier-border);
-  background: var(--background-modifier-hover);
+  background: transparent !important;
+  color: var(--interactive-accent);
 }
 
 .daytask-day.is-outside-month {
-  color: var(--text-faint);
+  opacity: 0.28;
 }
 
 .daytask-day.is-selected {
-  border-color: var(--interactive-accent);
-  background: var(--interactive-accent);
-  color: var(--text-on-accent);
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--interactive-accent);
+  font-weight: var(--font-bold);
+}
+
+.daytask-day.is-selected:hover {
+  background: transparent !important;
 }
 
 .daytask-day.is-today:not(.is-selected) .daytask-day-number {
@@ -119,89 +151,52 @@
   font-weight: var(--font-bold);
 }
 
-.daytask-day-count {
-  position: absolute;
-  right: 4px;
-  bottom: 3px;
-  min-width: 14px;
-  height: 14px;
-  padding: 0 3px;
-  border-radius: 7px;
-  background: var(--interactive-accent);
-  color: var(--text-on-accent);
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 14px;
-}
-
-.daytask-day.is-selected .daytask-day-count {
-  background: var(--text-on-accent);
-  color: var(--interactive-accent);
-}
-
-.daytask-day.is-complete:not(.is-selected) .daytask-day-count {
-  background: var(--color-green);
-}
-
 .daytask-tasks {
+  margin-top: 7px;
+  padding: 10px 3px 0;
   border-top: 1px solid var(--background-modifier-border);
-  padding-top: 24px;
 }
 
 .daytask-tasks-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 9px;
 }
 
 .daytask-tasks-header h3 {
   margin: 0;
   color: var(--text-normal);
-  font-size: 1.1rem;
-}
-
-.daytask-task-count {
-  margin-top: 3px;
-  color: var(--text-muted);
-  font-size: var(--font-ui-smaller);
+  font-size: var(--font-ui-medium);
+  font-weight: var(--font-semibold);
 }
 
 .daytask-add-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px 40px;
-  gap: 8px;
-  margin-bottom: 18px;
+  grid-template-columns: minmax(0, 1fr) 34px 34px;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .daytask-add-input {
   width: 100%;
-  height: 40px;
-  padding: 0 12px !important;
-  border-radius: 10px !important;
+  height: 34px;
+  padding: 0 10px !important;
+  border-radius: 7px !important;
+  font-size: var(--font-ui-small);
 }
 
-.daytask-add-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 9px;
-  border-radius: 10px;
-}
-
+.daytask-add-button,
 .daytask-advanced-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 9px;
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  border-radius: 7px;
+}
+
+.daytask-advanced-button {
   border: 1px solid var(--background-modifier-border);
-  border-radius: 10px;
-  background: var(--background-secondary);
+  background: transparent;
   box-shadow: none;
   color: var(--text-muted);
 }
@@ -215,28 +210,70 @@
 .daytask-task-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .daytask-task-row {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
-  min-height: 46px;
-  padding: 7px 8px 7px 12px;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 10px;
-  background: var(--background-secondary);
+  gap: 8px;
+  min-height: 40px;
+  padding: 7px 4px 7px 7px;
+  border-radius: 8px;
+  background: var(--background-primary);
+  cursor: grab;
+  user-select: none;
+  transition: background-color 120ms ease;
+}
+
+.daytask-task-row.is-priority-low {
+  background: color-mix(in srgb, #f9dce4 3%, var(--background-primary));
+}
+
+.daytask-task-row.is-priority-medium {
+  background: color-mix(in srgb, #f8c8d5 12%, var(--background-primary));
+}
+
+.daytask-task-row.is-priority-high {
+  background: color-mix(in srgb, #f4a9bd 22%, var(--background-primary));
+}
+
+.daytask-task-row:active {
+  cursor: grabbing;
+}
+
+.daytask-task-row.is-dragging {
+  opacity: 0.4;
+}
+
+.daytask-task-row.drop-before {
+  box-shadow: inset 0 2px 0 var(--interactive-accent);
+}
+
+.daytask-task-row.drop-after {
+  box-shadow: inset 0 -2px 0 var(--interactive-accent);
+}
+
+.daytask-task-row:hover {
+  background: color-mix(in srgb, var(--text-normal) 5%, var(--background-primary));
+}
+
+.daytask-task-row.is-priority-low:hover {
+  background: color-mix(in srgb, #f9dce4 7%, var(--background-primary));
+}
+
+.daytask-task-row.is-priority-medium:hover {
+  background: color-mix(in srgb, #f8c8d5 17%, var(--background-primary));
+}
+
+.daytask-task-row.is-priority-high:hover {
+  background: color-mix(in srgb, #f4a9bd 27%, var(--background-primary));
 }
 
 .daytask-task-content {
   min-width: 0;
-  padding: 2px 0;
-}
-
-.daytask-task-row:hover {
-  border-color: var(--background-modifier-border-hover);
+  padding: 1px 0;
 }
 
 .daytask-checkbox {
@@ -247,16 +284,26 @@
   overflow: hidden;
   color: var(--text-normal);
   font-size: var(--font-ui-small);
-  line-height: 1.4;
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.daytask-task-notes {
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
 }
 
 .daytask-task-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 10px;
+  gap: 3px 9px;
   margin-top: 3px;
   color: var(--text-muted);
   font-size: var(--font-ui-smaller);
@@ -270,7 +317,8 @@
   min-width: 0;
 }
 
-.daytask-meta-icon {
+.daytask-meta-icon,
+.daytask-notes-indicator {
   display: inline-flex;
   width: 12px;
   height: 12px;
@@ -283,28 +331,22 @@
 }
 
 .daytask-priority-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--text-faint);
 }
 
 .daytask-priority.is-low .daytask-priority-dot {
-  background: var(--color-green);
+  background: #e8c5cf;
 }
 
 .daytask-priority.is-medium .daytask-priority-dot {
-  background: var(--color-orange);
+  background: #e9a9ba;
 }
 
 .daytask-priority.is-high .daytask-priority-dot {
-  background: var(--color-red);
-}
-
-.daytask-notes-indicator {
-  display: inline-flex;
-  width: 14px;
-  height: 14px;
+  background: #df829d;
 }
 
 .daytask-task-row.is-completed .daytask-task-title {
@@ -316,7 +358,7 @@
 .daytask-task-actions {
   display: flex;
   opacity: 0;
-  transition: opacity 120ms ease;
+  transition: opacity 100ms ease;
 }
 
 .daytask-task-row:hover .daytask-task-actions,
@@ -325,8 +367,9 @@
 }
 
 .daytask-task-actions .daytask-icon-button {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
+  padding: 6px;
 }
 
 .daytask-delete-button:hover {
@@ -337,25 +380,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 34px 16px;
+  padding: 20px 8px;
   color: var(--text-muted);
   text-align: center;
 }
 
 .daytask-empty-icon {
-  width: 28px;
-  height: 28px;
-  margin-bottom: 10px;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 7px;
   color: var(--text-faint);
 }
 
 .daytask-empty-title {
   color: var(--text-muted);
+  font-size: var(--font-ui-small);
   font-weight: var(--font-semibold);
 }
 
 .daytask-empty-hint {
-  margin-top: 4px;
+  margin-top: 3px;
   color: var(--text-faint);
   font-size: var(--font-ui-smaller);
 }
@@ -367,11 +411,310 @@
   margin-top: 20px;
 }
 
-.daytask-hidden {
-  display: none !important;
+.daytask-choice-section {
+  margin: 14px 0;
 }
 
-.modal.mod-settings .daytask-hidden,
+.daytask-choice-heading {
+  margin-bottom: 8px;
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+}
+
+.daytask-priority-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 6px;
+}
+
+.daytask-priority-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 32px;
+  padding: 3px 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 16px;
+  background: var(--background-primary);
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-priority-choice:hover {
+  border-color: var(--background-modifier-border-hover);
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.daytask-priority-choice.is-selected {
+  border-color: color-mix(in srgb, #df829d 50%, var(--background-modifier-border));
+  background: color-mix(in srgb, #f4a9bd 12%, var(--background-primary));
+  color: var(--text-normal);
+  font-weight: var(--font-medium);
+}
+
+.daytask-priority-choice-dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.daytask-priority-choice-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daytask-priority-choice.is-low .daytask-priority-choice-dot {
+  border: 1px solid #e8c5cf;
+  background: #fff;
+}
+
+.daytask-priority-choice.is-medium .daytask-priority-choice-dot {
+  background: #f3bdcb;
+}
+
+.daytask-priority-choice.is-high .daytask-priority-choice-dot {
+  background: #df829d;
+}
+
+.daytask-recurrence-picker,
+.daytask-unit-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.daytask-recurrence-choice,
+.daytask-unit-choice {
+  height: 29px;
+  padding: 3px 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 15px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-recurrence-choice:hover,
+.daytask-unit-choice:hover {
+  border-color: var(--interactive-accent);
+  color: var(--interactive-accent);
+}
+
+.daytask-recurrence-choice.is-selected,
+.daytask-unit-choice.is-selected {
+  border-color: var(--interactive-accent);
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.daytask-custom-recurrence {
+  margin-top: 9px;
+  padding: 10px;
+  border-left: 2px solid var(--interactive-accent);
+  background: var(--background-secondary-alt);
+}
+
+.daytask-custom-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.daytask-custom-label {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.daytask-recurrence-interval {
+  width: 64px;
+  height: 30px;
+  text-align: center;
+}
+
+.daytask-custom-until {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.daytask-custom-until label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.daytask-custom-until input[type="date"] {
+  width: 160px;
+  height: 32px;
+}
+
+.daytask-custom-hint {
+  margin-top: 6px;
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-time-section {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  background: var(--background-secondary-alt);
+}
+
+.daytask-time-header,
+.daytask-time-heading {
+  display: flex;
+  align-items: center;
+}
+
+.daytask-time-header {
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.daytask-time-heading {
+  gap: 7px;
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+}
+
+.daytask-time-clear {
+  height: 26px;
+  padding: 2px 8px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-time-clear:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.daytask-time-range {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) 24px minmax(110px, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.daytask-time-range-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+
+.daytask-time-range-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.daytask-time-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 9px 11px 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 9px;
+  background: var(--background-primary);
+}
+
+.daytask-time-field:focus-within {
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--interactive-accent) 16%, transparent);
+}
+
+.daytask-time-field-label {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  line-height: 1;
+}
+
+.daytask-time-input {
+  width: 100%;
+  min-width: 0;
+  height: 26px;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-normal);
+  font-size: 1.25rem;
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.daytask-time-separator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text-muted);
+}
+
+.daytask-time-separator svg {
+  width: 15px;
+  height: 15px;
+}
+
+.daytask-time-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.daytask-time-preset {
+  height: 27px;
+  padding: 2px 9px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  background: var(--background-primary);
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-time-preset:hover {
+  border-color: var(--interactive-accent);
+  color: var(--interactive-accent);
+}
+
+.daytask-time-hint {
+  margin-top: 8px;
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-time-error {
+  margin-top: 7px;
+  color: var(--text-error);
+  font-size: var(--font-ui-smaller);
+  text-align: right;
+}
+
+.daytask-hidden,
 .daytask-hidden.setting-item {
   display: none !important;
 }
@@ -383,27 +726,20 @@
 
 @media (hover: none), (max-width: 500px) {
   .daytask-shell {
-    padding: 16px 12px 24px;
-  }
-
-  .daytask-grid {
-    gap: 2px;
-  }
-
-  .daytask-day {
-    border-radius: 8px;
+    padding: 8px 6px 16px;
   }
 
   .daytask-task-actions {
     opacity: 1;
   }
 
-  .daytask-task-row {
-    padding-left: 10px;
+  .daytask-time-range {
+    grid-template-columns: minmax(90px, 1fr) 20px minmax(90px, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .daytask-day,
   .daytask-task-actions {
     transition: none;
   }

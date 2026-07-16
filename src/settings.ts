@@ -25,16 +25,5 @@ export class DayTaskSettingTab extends PluginSettingTab {
           }),
       );
 
-    new Setting(containerEl)
-      .setName(strings.settingsConfirmDelete)
-      .setDesc(strings.settingsConfirmDeleteDesc)
-      .addToggle((toggle) =>
-        toggle
-          .setValue(this.plugin.data.settings.confirmBeforeDelete)
-          .onChange(async (value) => {
-            this.plugin.data.settings.confirmBeforeDelete = value;
-            await this.plugin.persistData();
-          }),
-      );
   }
 }

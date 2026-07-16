@@ -1,6 +1,7 @@
 import { ItemView, WorkspaceLeaf, setIcon } from "obsidian";
 import type DayTaskPlugin from "../main";
 import {
+  addDays,
   addMonths,
   formatDateKey,
   getCalendarDates,
@@ -8,7 +9,7 @@ import {
   sameMonth,
 } from "./date-utils";
 import { getStrings } from "./i18n";
-import type { DayTaskItem, RecurrenceRule, TaskPriority } from "./types";
+import type { DayTaskItem, TaskPriority } from "./types";
 
 export const VIEW_TYPE_DAYTASK = "daytask-calendar-view";
 
@@ -16,6 +17,7 @@ export class DayTaskView extends ItemView {
   private selectedDate = formatDateKey(new Date());
   private visibleMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   private taskInput: HTMLInputElement | null = null;
+  private draggedTaskId: string | null = null;
 
   constructor(leaf: WorkspaceLeaf, private readonly plugin: DayTaskPlugin) {
     super(leaf);
@@ -66,71 +68,96 @@ export class DayTaskView extends ItemView {
     const strings = getStrings();
     const section = parent.createEl("section", { cls: "daytask-calendar" });
     const header = section.createDiv({ cls: "daytask-calendar-header" });
+    const title = header.createDiv({ cls: "daytask-calendar-title" });
+    title.createSpan({
+      cls: "daytask-calendar-month",
+      text: new Intl.DateTimeFormat(undefined, { month: "long" }).format(this.visibleMonth),
+    });
+    title.createSpan({
+      cls: "daytask-calendar-year",
+      text: String(this.visibleMonth.getFullYear()),
+    });
 
-    const previous = this.createIconButton(header, "chevron-left", strings.previousMonth);
+    const controls = header.createDiv({ cls: "daytask-calendar-controls" });
+    const previous = this.createIconButton(controls, "chevron-left", strings.previousMonth);
     previous.addEventListener("click", () => {
       this.visibleMonth = addMonths(this.visibleMonth, -1);
       this.render();
     });
-
-    const monthLabel = header.createEl("h3", { cls: "daytask-month-label" });
-    monthLabel.setText(
-      new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long" }).format(
-        this.visibleMonth,
-      ),
-    );
-
-    const next = this.createIconButton(header, "chevron-right", strings.nextMonth);
+    const today = controls.createEl("button", {
+      cls: "daytask-header-today",
+      text: strings.today,
+      attr: { type: "button" },
+    });
+    today.addEventListener("click", () => this.selectToday());
+    const next = this.createIconButton(controls, "chevron-right", strings.nextMonth);
     next.addEventListener("click", () => {
       this.visibleMonth = addMonths(this.visibleMonth, 1);
       this.render();
     });
 
-    const todayButton = section.createEl("button", {
-      cls: "daytask-today-button",
-      text: strings.today,
-    });
-    todayButton.addEventListener("click", () => this.selectToday());
-
     const grid = section.createDiv({ cls: "daytask-grid" });
+    grid.setAttr("role", "grid");
     const mondayFirst = this.plugin.data.settings.weekStartsOnMonday;
     this.getWeekdayLabels(mondayFirst).forEach((label) => {
       grid.createDiv({ cls: "daytask-weekday", text: label });
     });
 
     const todayKey = formatDateKey(new Date());
-    for (const date of getCalendarDates(this.visibleMonth, mondayFirst)) {
+    const calendarDates = getCalendarDates(this.visibleMonth, mondayFirst);
+    const selectedIsVisible = calendarDates.some(
+      (date) => formatDateKey(date) === this.selectedDate,
+    );
+    const keyboardFocusDate = selectedIsVisible
+      ? this.selectedDate
+      : formatDateKey(new Date(this.visibleMonth.getFullYear(), this.visibleMonth.getMonth(), 1));
+    for (const date of calendarDates) {
       const dateKey = formatDateKey(date);
-      const tasks = this.plugin.getTasksForDate(dateKey);
-      const completed = tasks.length > 0 && tasks.every((task) => task.completed);
       const dayButton = grid.createEl("button", {
         cls: "daytask-day",
         attr: {
+          "data-date": dateKey,
           "aria-label": new Intl.DateTimeFormat(undefined, { dateStyle: "full" }).format(date),
           "aria-pressed": String(dateKey === this.selectedDate),
+          tabindex: dateKey === keyboardFocusDate ? "0" : "-1",
         },
       });
       dayButton.createSpan({ cls: "daytask-day-number", text: String(date.getDate()) });
       dayButton.toggleClass("is-outside-month", !sameMonth(date, this.visibleMonth));
       dayButton.toggleClass("is-today", dateKey === todayKey);
       dayButton.toggleClass("is-selected", dateKey === this.selectedDate);
-      dayButton.toggleClass("has-tasks", tasks.length > 0);
-      dayButton.toggleClass("is-complete", completed);
-
-      if (tasks.length > 0) {
-        dayButton.createSpan({
-          cls: "daytask-day-count",
-          text: tasks.length > 9 ? "9+" : String(tasks.length),
-        });
-      }
 
       dayButton.addEventListener("click", () => {
-        this.selectedDate = dateKey;
-        if (!sameMonth(date, this.visibleMonth)) {
-          this.visibleMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        }
-        this.render();
+        this.selectDate(date, true);
       });
+      dayButton.addEventListener("keydown", (event) => {
+        const offsets: Partial<Record<string, number>> = {
+          ArrowLeft: -1,
+          ArrowRight: 1,
+          ArrowUp: -7,
+          ArrowDown: 7,
+        };
+        const offset = offsets[event.key];
+        if (offset === undefined) return;
+        event.preventDefault();
+        this.selectDate(addDays(date, offset), true);
+      });
+    }
+  }
+
+  private selectDate(date: Date, restoreFocus: boolean): void {
+    this.selectedDate = formatDateKey(date);
+    if (!sameMonth(date, this.visibleMonth)) {
+      this.visibleMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+    this.render();
+    if (restoreFocus) {
+      window.setTimeout(() => {
+        const button = this.containerEl.querySelector<HTMLButtonElement>(
+          `.daytask-day[data-date="${this.selectedDate}"]`,
+        );
+        button?.focus();
+      }, 0);
     }
   }
 
@@ -147,10 +174,6 @@ export class DayTaskView extends ItemView {
         month: "long",
         day: "numeric",
       }).format(selected),
-    });
-    headingGroup.createDiv({
-      cls: "daytask-task-count",
-      text: `${tasks.length} ${strings.tasks}`,
     });
 
     const form = section.createEl("form", { cls: "daytask-add-form" });
@@ -197,8 +220,43 @@ export class DayTaskView extends ItemView {
 
     const list = section.createDiv({ cls: "daytask-task-list" });
     for (const task of tasks) {
-      const row = list.createDiv({ cls: "daytask-task-row" });
+      const row = list.createDiv({
+        cls: `daytask-task-row is-priority-${task.priority}`,
+      });
+      row.dataset.taskId = task.id;
+      row.draggable = true;
+      row.setAttr("title", strings.reorderTask);
       row.toggleClass("is-completed", task.completed);
+      row.addEventListener("dragstart", (event) => {
+        this.draggedTaskId = task.id;
+        event.dataTransfer?.setData("text/plain", task.id);
+        if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+        row.addClass("is-dragging");
+      });
+      row.addEventListener("dragend", () => {
+        this.draggedTaskId = null;
+        this.clearDragStyles();
+      });
+      row.addEventListener("dragover", (event) => {
+        if (!this.draggedTaskId || this.draggedTaskId === task.id) return;
+        event.preventDefault();
+        const placeAfter = event.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
+        row.toggleClass("drop-before", !placeAfter);
+        row.toggleClass("drop-after", placeAfter);
+      });
+      row.addEventListener("dragleave", () => {
+        row.removeClass("drop-before");
+        row.removeClass("drop-after");
+      });
+      row.addEventListener("drop", (event) => {
+        event.preventDefault();
+        const sourceId = this.draggedTaskId ?? event.dataTransfer?.getData("text/plain");
+        if (!sourceId || sourceId === task.id) return;
+        const placeAfter = event.clientY > row.getBoundingClientRect().top + row.offsetHeight / 2;
+        this.draggedTaskId = null;
+        this.clearDragStyles();
+        void this.plugin.reorderTask(sourceId, task.id, placeAfter);
+      });
 
       const checkbox = row.createEl("input", {
         cls: "daytask-checkbox",
@@ -216,6 +274,9 @@ export class DayTaskView extends ItemView {
       const title = content.createDiv({ cls: "daytask-task-title", text: task.title });
       title.setAttr("title", task.title);
       this.renderTaskMeta(content, task);
+      if (task.notes) {
+        content.createDiv({ cls: "daytask-task-notes", text: task.notes });
+      }
 
       const actions = row.createDiv({ cls: "daytask-task-actions" });
       const editButton = this.createIconButton(actions, "pencil", strings.editTask);
@@ -223,7 +284,7 @@ export class DayTaskView extends ItemView {
 
       const deleteButton = this.createIconButton(actions, "trash-2", strings.deleteTask);
       deleteButton.addClass("daytask-delete-button");
-      deleteButton.addEventListener("click", () => this.plugin.requestDeleteTask(task));
+      deleteButton.addEventListener("click", () => void this.plugin.deleteTask(task.id));
     }
   }
 
@@ -236,12 +297,17 @@ export class DayTaskView extends ItemView {
     return button;
   }
 
+  private clearDragStyles(): void {
+    this.containerEl
+      .querySelectorAll(".daytask-task-row")
+      .forEach((element) => element.removeClass("is-dragging", "drop-before", "drop-after"));
+  }
+
   private renderTaskMeta(parent: HTMLElement, task: DayTaskItem): void {
     if (
-      !task.time &&
-      task.priority === "none" &&
-      !task.notes &&
-      task.recurrence.frequency === "none"
+      !task.startTime &&
+      !task.endTime &&
+      task.priority === "none"
     ) {
       return;
     }
@@ -261,55 +327,21 @@ export class DayTaskView extends ItemView {
       priority.createSpan({ cls: "daytask-priority-dot" });
       priority.createSpan({ text: priorityLabels[task.priority] });
     }
-    if (task.time) {
-      const time = meta.createSpan({ cls: "daytask-meta-item", text: task.time });
+    if (task.startTime || task.endTime) {
+      const label =
+        task.startTime && task.endTime
+          ? `${task.startTime}–${task.endTime}`
+          : task.startTime || task.endTime;
+      const time = meta.createSpan({ cls: "daytask-meta-item", text: label });
       const icon = time.createSpan({ cls: "daytask-meta-icon" });
       setIcon(icon, "clock");
       time.prepend(icon);
     }
-    if (task.recurrence.frequency !== "none") {
-      const repeat = meta.createSpan({
-        cls: "daytask-meta-item",
-        text: this.getRecurrenceLabel(task.recurrence),
-      });
-      const icon = repeat.createSpan({ cls: "daytask-meta-icon" });
-      setIcon(icon, "repeat");
-      repeat.prepend(icon);
-    }
-    if (task.notes) {
-      const notes = meta.createSpan({
-        cls: "daytask-meta-item daytask-notes-indicator",
-        attr: { title: task.notes, "aria-label": strings.taskNotes },
-      });
-      setIcon(notes, "file-text");
-    }
-  }
-
-  private getRecurrenceLabel(rule: RecurrenceRule): string {
-    const strings = getStrings();
-    const labels = {
-      daily: strings.recurrenceDaily,
-      weekdays: strings.recurrenceWeekdays,
-      weekly: strings.recurrenceWeekly,
-      monthly: strings.recurrenceMonthly,
-      yearly: strings.recurrenceYearly,
-    };
-    if (rule.frequency !== "custom" && rule.frequency !== "none") return labels[rule.frequency];
-    if (rule.frequency === "custom") {
-      const units = {
-        day: strings.unitDay,
-        week: strings.unitWeek,
-        month: strings.unitMonth,
-        year: strings.unitYear,
-      };
-      return `${strings.recurrenceEvery} ${rule.interval} ${units[rule.unit]}`;
-    }
-    return "";
   }
 
   private getWeekdayLabels(mondayFirst: boolean): string[] {
     const labels = Array.from({ length: 7 }, (_, index) =>
-      new Intl.DateTimeFormat(undefined, { weekday: "narrow" }).format(
+      new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(
         new Date(2026, 0, 4 + index),
       ),
     );
