@@ -1,20 +1,37 @@
-# DayTask publishing checklist
+# AgendaPane publishing checklist
 
-This checklist prepares DayTask for its first Obsidian Community directory submission.
+This checklist prepares AgendaPane for its first Obsidian Community directory submission.
 
 ## 1. Confirm the public identity
 
 Current release identity:
 
-- Name: `DayTask`
+- Name: `AgendaPane`
 - Plugin ID: `daytask`
 - Author: `PeanutUp`
-- Repository: `https://github.com/PeanutUp/Obsidian-DayTask`
+- Repository: `https://github.com/PeanutUp/AgendaPane`
 - Initial public version: `1.0.0`
 - Minimum Obsidian version: `1.5.0`
 - Description: `Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.`
 
-Before submission, search the Community directory one final time for both the name and ID. A plugin named **DayTasks** already exists. Although `DayTask` and `daytask` are different strings, the similarity can confuse users and weaken search visibility. If the product will be renamed, do it before the first public release and update the repository, manifest, data-folder migration plan, documentation, and screenshots together.
+Before submission, search the Community directory one final time for both `AgendaPane` and the persistent plugin ID `daytask`. The display name was changed before the first Community-directory submission, while the ID remains unchanged to preserve existing installations, data, saved workspaces, and shortcuts.
+
+### Rename the GitHub repository
+
+Before creating the public release:
+
+1. Open the current repository on GitHub and go to **Settings → General → Repository name**.
+2. Rename it to `AgendaPane`.
+3. Update the local remote:
+
+   ```bash
+   git remote set-url origin https://github.com/PeanutUp/AgendaPane.git
+   git remote -v
+   ```
+
+4. Confirm that the README, release links, Issues links, security links, and submission URL all use `https://github.com/PeanutUp/AgendaPane`.
+
+The local project folder may also be renamed, but its name does not affect Obsidian or GitHub. Do not rename the installed plugin folder from `daytask`; it must continue to match the persistent plugin ID.
 
 ## 2. Final product checks
 
@@ -39,10 +56,10 @@ Add a `docs/assets/` directory and capture images with Obsidian's default theme.
 
 Recommended media:
 
-1. `daytask-sidebar.png` — calendar and several tasks in the sidebar
-2. `daytask-editor.png` — time, labeled priority buttons, compact recurrence period, and notes
-3. `daytask-recurrence.gif` — switch from the default **No end** state to a duration or custom date, then move through dates
-4. `daytask-no-markdown.gif` — create a task while the file explorer remains unchanged
+1. `agenda-pane-sidebar.png` — calendar and several tasks in the sidebar
+2. `agenda-pane-editor.png` — time, labeled priority buttons, compact recurrence period, and notes
+3. `agenda-pane-recurrence.gif` — switch from the default **No end** state to a duration or custom date, then move through dates
+4. `agenda-pane-no-markdown.gif` — create a task while the file explorer remains unchanged
 5. Optional dark-theme screenshot
 
 Use the sidebar screenshot near the top of both README files. Keep GIFs short and optimized so the repository page loads quickly.
@@ -72,7 +89,7 @@ In GitHub, open **Releases → Draft a new release**.
 
 - Tag: `1.0.0` — do not use `v1.0.0`
 - Target: the default branch containing the matching manifest
-- Title: `DayTask 1.0.0`
+- Title: `AgendaPane 1.0.0`
 - Description: copy the `1.0.0` section from `CHANGELOG.md`
 - Attach `main.js`
 - Attach `manifest.json`
@@ -82,14 +99,14 @@ Publish the release and verify that all three assets can be downloaded separatel
 
 ## 6. Run a public beta
 
-Before official submission, ask testers to install the repository through BRAT. Test with fresh data and with an upgraded copy of an existing `data.json`. Collect the Obsidian version, operating system, DayTask version, reproduction steps, and console errors for each bug.
+Before official submission, ask testers to install the repository through BRAT. Test with fresh data and with an upgraded copy of an existing `data.json`. Collect the Obsidian version, operating system, AgendaPane version, reproduction steps, and console errors for each bug.
 
 ## 7. Submit to Obsidian Community
 
 1. Sign in at <https://community.obsidian.md>.
 2. Link the GitHub account that owns the repository.
 3. Open **Plugins → New plugin**.
-4. Submit `https://github.com/PeanutUp/Obsidian-DayTask`.
+4. Submit `https://github.com/PeanutUp/AgendaPane`.
 5. Accept the developer policies and maintenance confirmation.
 6. Address automated review feedback.
 

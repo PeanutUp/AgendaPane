@@ -1,9 +1,9 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import type DayTaskPlugin from "../main";
+import type AgendaPanePlugin from "../main";
 import { getStrings } from "./i18n";
 
-export class DayTaskSettingTab extends PluginSettingTab {
-  constructor(app: App, private readonly plugin: DayTaskPlugin) {
+export class AgendaPaneSettingTab extends PluginSettingTab {
+  constructor(app: App, private readonly plugin: AgendaPanePlugin) {
     super(app, plugin);
   }
 

@@ -1,4 +1,4 @@
-export interface DayTaskItem {
+export interface AgendaPaneItem {
   id: string;
   title: string;
   date: string;
@@ -46,19 +46,19 @@ export interface TaskDraft {
   recurrence: RecurrenceRule;
 }
 
-export interface DayTaskSettings {
+export interface AgendaPaneSettings {
   weekStartsOnMonday: boolean;
 }
 
-export interface DayTaskData {
+export interface AgendaPaneData {
   schemaVersion: number;
-  tasks: DayTaskItem[];
-  settings: DayTaskSettings;
+  tasks: AgendaPaneItem[];
+  settings: AgendaPaneSettings;
   excludedOccurrences: string[];
   manualOrderDates: string[];
 }
 
-export const DEFAULT_SETTINGS: DayTaskSettings = {
+export const DEFAULT_SETTINGS: AgendaPaneSettings = {
   weekStartsOnMonday: true,
 };
 
@@ -68,7 +68,7 @@ export const DEFAULT_RECURRENCE: RecurrenceRule = {
   unit: "day",
 };
 
-export const DEFAULT_DATA: DayTaskData = {
+export const DEFAULT_DATA: AgendaPaneData = {
   schemaVersion: 5,
   tasks: [],
   settings: DEFAULT_SETTINGS,

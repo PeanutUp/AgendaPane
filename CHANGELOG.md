@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to DayTask are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
+All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [1.0.0] - 2026-07-16
 
@@ -23,7 +23,7 @@ All notable changes to DayTask are documented in this file. Versions follow [Sem
 
 ### Privacy
 
-- DayTask does not create or modify Markdown notes
-- DayTask does not access the network, collect telemetry, or require an account
+- AgendaPane does not create or modify Markdown notes
+- AgendaPane does not access the network, collect telemetry, or require an account
 
-[1.0.0]: https://github.com/PeanutUp/Obsidian-DayTask/releases/tag/1.0.0
+[1.0.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.0.0

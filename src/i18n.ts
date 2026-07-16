@@ -1,4 +1,4 @@
-export interface DayTaskStrings {
+export interface AgendaPaneStrings {
   viewName: string;
   open: string;
   previousMonth: string;
@@ -63,9 +63,9 @@ export interface DayTaskStrings {
   reorderTask: string;
 }
 
-const EN: DayTaskStrings = {
-  viewName: "DayTask",
-  open: "Open DayTask",
+const EN: AgendaPaneStrings = {
+  viewName: "AgendaPane",
+  open: "Open AgendaPane",
   previousMonth: "Previous month",
   nextMonth: "Next month",
   today: "Today",
@@ -128,9 +128,9 @@ const EN: DayTaskStrings = {
   reorderTask: "Drag to reorder",
 };
 
-const ZH: DayTaskStrings = {
-  viewName: "DayTask",
-  open: "打开 DayTask",
+const ZH: AgendaPaneStrings = {
+  viewName: "AgendaPane",
+  open: "打开 AgendaPane",
   previousMonth: "上个月",
   nextMonth: "下个月",
   today: "今天",
@@ -193,7 +193,7 @@ const ZH: DayTaskStrings = {
   reorderTask: "拖动调整顺序",
 };
 
-export function getStrings(): DayTaskStrings {
+export function getStrings(): AgendaPaneStrings {
   const language = document.documentElement.lang || navigator.language || "en";
   return language.toLowerCase().startsWith("zh") ? ZH : EN;
 }

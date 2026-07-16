@@ -1,10 +1,10 @@
-# DayTask
+# AgendaPane
 
 [English](README.md)
 
 **一个放在 Obsidian 侧边栏里的日历任务插件，不创建、也不修改任何 Markdown 笔记。**
 
-DayTask 在紧凑的月历下方显示所选日期的任务，适合希望直接在 Obsidian 中安排日程、但又不想生成大量每日笔记或把任务散落到仓库各处的用户。
+AgendaPane 在紧凑的月历下方显示所选日期的任务，适合希望直接在 Obsidian 中安排日程、但又不想生成大量每日笔记或把任务散落到仓库各处的用户。
 
 ## 主要功能
 
@@ -25,7 +25,7 @@ DayTask 在紧凑的月历下方显示所选日期的任务，适合希望直接
 
 ## 基本使用
 
-1. 启用 DayTask，插件会自动在右侧边栏打开。
+1. 启用 AgendaPane，插件会自动在右侧边栏打开。
 2. 在日历中选择日期。
 3. 在快速添加框输入任务；需要时间、优先级、循环或备注时，点击详细设置按钮。
 4. 勾选任务表示完成；按住任务卡任意位置可拖动排序；右侧按钮可编辑或删除。
@@ -48,7 +48,7 @@ DayTask 在紧凑的月历下方显示所选日期的任务，适合希望直接
 
 紧凑的“循环期限”选项会把当前日历日期作为固定开始日期，并默认选中**不设截止**。同一行可以快捷选择 1 个月、3 个月或 6 个月；只有选择**自定义日期**时，才会在原位置展开年、月、日输入，不会弹出遮挡编辑窗口的大日历。截止日期当天如果符合循环规则，也会生成任务。
 
-DayTask 会预先生成未来一年的循环任务，并在插件启动时继续延长。如果把某次循环任务改为“不循环”，将只保留当前任务并删除该系列的其他任务。
+AgendaPane 会预先生成未来一年的循环任务，并在插件启动时继续延长。如果把某次循环任务改为“不循环”，将只保留当前任务并删除该系列的其他任务。
 
 ## 排序规则
 
@@ -62,7 +62,7 @@ DayTask 会预先生成未来一年的循环任务，并在插件启动时继续
 
 ## 数据保存位置
 
-DayTask 不会创建 Markdown 笔记。任务数据由 Obsidian 保存在：
+AgendaPane 不会创建 Markdown 笔记。任务数据由 Obsidian 保存在：
 
 ```text
 <你的仓库>/.obsidian/plugins/daytask/data.json
@@ -70,24 +70,26 @@ DayTask 不会创建 Markdown 笔记。任务数据由 Obsidian 保存在：
 
 插件使用 Obsidian 官方的 `Plugin.loadData()` 和 `Plugin.saveData()` API，不读取笔记正文、不连接网络、不收集分析数据，也不需要账号。详细说明请阅读[隐私说明](PRIVACY.md)。
 
+插件目录仍使用 `daytask`，因为它是插件的持久 ID。保留这个 ID 可以在显示名称改为 AgendaPane 后继续使用原来的任务数据、工作区布局和快捷键。
+
 如果需要在多台设备上使用，请确保同步工具包含仓库里的 `.obsidian` 目录。任务数据较重要时，建议同时备份 `data.json`。
 
 ## 安装方法
 
 ### Obsidian 社区插件
 
-DayTask 通过官方审核后：
+AgendaPane 通过官方审核后：
 
 1. 打开 **设置 → 第三方插件 → 浏览**。
-2. 搜索 **DayTask**。
+2. 搜索 **AgendaPane**。
 3. 点击 **安装**，然后点击 **启用**。
 
 ### 手动安装
 
-1. 从对应版本的 [GitHub Release](https://github.com/PeanutUp/Obsidian-DayTask/releases) 下载 `main.js`、`manifest.json` 和 `styles.css`。
+1. 从对应版本的 [GitHub Release](https://github.com/PeanutUp/AgendaPane/releases) 下载 `main.js`、`manifest.json` 和 `styles.css`。
 2. 创建 `<你的仓库>/.obsidian/plugins/daytask/` 文件夹。
 3. 将这三个文件直接放进该文件夹。
-4. 重新加载 Obsidian，然后在第三方插件中启用 DayTask。
+4. 重新加载 Obsidian，然后在第三方插件中启用 AgendaPane。
 
 ### 从源码构建
 
@@ -115,7 +117,7 @@ npm run dev
 
 ## 反馈与支持
 
-- Bug 和功能建议请提交到 [GitHub Issues](https://github.com/PeanutUp/Obsidian-DayTask/issues)。
+- Bug 和功能建议请提交到 [GitHub Issues](https://github.com/PeanutUp/AgendaPane/issues)。
 - 涉及安全的问题请参照 [SECURITY.md](SECURITY.md)。
 - 版本变化请查看 [CHANGELOG.md](CHANGELOG.md)。
 

@@ -2,31 +2,31 @@ import { Notice, Plugin } from "obsidian";
 import { addDays, formatDateKey, getNextOccurrence, isDateKey } from "./src/date-utils";
 import { getStrings } from "./src/i18n";
 import { TaskModal } from "./src/modals";
-import { DayTaskSettingTab } from "./src/settings";
+import { AgendaPaneSettingTab } from "./src/settings";
 import {
   DEFAULT_DATA,
   DEFAULT_RECURRENCE,
   DEFAULT_SETTINGS,
-  DayTaskData,
-  DayTaskItem,
-  DayTaskSettings,
+  AgendaPaneData,
+  AgendaPaneItem,
+  AgendaPaneSettings,
   RecurrenceFrequency,
   RecurrenceRule,
   RecurrenceUnit,
   TaskDraft,
   TaskPriority,
 } from "./src/types";
-import { DayTaskView, VIEW_TYPE_DAYTASK } from "./src/view";
+import { AgendaPaneView, VIEW_TYPE_AGENDA_PANE } from "./src/view";
 
-export default class DayTaskPlugin extends Plugin {
-  data: DayTaskData = structuredClone(DEFAULT_DATA);
+export default class AgendaPanePlugin extends Plugin {
+  data: AgendaPaneData = structuredClone(DEFAULT_DATA);
   private saveQueue: Promise<void> = Promise.resolve();
   private needsMigrationSave = false;
 
   async onload(): Promise<void> {
     await this.loadPluginData();
 
-    this.registerView(VIEW_TYPE_DAYTASK, (leaf) => new DayTaskView(leaf, this));
+    this.registerView(VIEW_TYPE_AGENDA_PANE, (leaf) => new AgendaPaneView(leaf, this));
 
     const strings = getStrings();
     this.addRibbonIcon("calendar-check-2", strings.open, () => {
@@ -49,7 +49,7 @@ export default class DayTaskPlugin extends Plugin {
       },
     });
 
-    this.addSettingTab(new DayTaskSettingTab(this.app, this));
+    this.addSettingTab(new AgendaPaneSettingTab(this.app, this));
 
     const initializeWorkspace = (): void => {
       const expanded = this.expandAllRecurringSeries();
@@ -64,21 +64,21 @@ export default class DayTaskPlugin extends Plugin {
   }
 
   async onunload(): Promise<void> {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_DAYTASK);
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_AGENDA_PANE);
     await this.saveQueue;
   }
 
-  async activateView(): Promise<DayTaskView | null> {
-    let leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_DAYTASK)[0];
+  async activateView(): Promise<AgendaPaneView | null> {
+    let leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_AGENDA_PANE)[0];
     if (!leaf) {
       leaf = this.app.workspace.getRightLeaf(false) ?? this.app.workspace.getLeaf(true);
-      await leaf.setViewState({ type: VIEW_TYPE_DAYTASK, active: true });
+      await leaf.setViewState({ type: VIEW_TYPE_AGENDA_PANE, active: true });
     }
     await this.app.workspace.revealLeaf(leaf);
-    return leaf.view instanceof DayTaskView ? leaf.view : null;
+    return leaf.view instanceof AgendaPaneView ? leaf.view : null;
   }
 
-  getTasksForDate(date: string): DayTaskItem[] {
+  getTasksForDate(date: string): AgendaPaneItem[] {
     const manual = this.data.manualOrderDates.includes(date);
     const priorityRank: Record<TaskPriority, number> = {
       high: 0,
@@ -227,7 +227,7 @@ export default class DayTaskPlugin extends Plugin {
     this.refreshViews();
   }
 
-  openEditModal(task: DayTaskItem): void {
+  openEditModal(task: AgendaPaneItem): void {
     new TaskModal(this.app, this.taskToDraft(task), "edit", getStrings(), (draft) =>
       this.updateTask(task.id, draft),
     ).open();
@@ -252,8 +252,8 @@ export default class DayTaskPlugin extends Plugin {
   }
 
   refreshViews(): void {
-    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE_DAYTASK)) {
-      if (leaf.view instanceof DayTaskView) leaf.view.render();
+    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE_AGENDA_PANE)) {
+      if (leaf.view instanceof AgendaPaneView) leaf.view.render();
     }
   }
 
@@ -263,7 +263,7 @@ export default class DayTaskPlugin extends Plugin {
       .catch(() => undefined)
       .then(() => this.saveData(snapshot))
       .catch((error: unknown) => {
-        new Notice(`DayTask: ${error instanceof Error ? error.message : String(error)}`);
+        new Notice(`AgendaPane: ${error instanceof Error ? error.message : String(error)}`);
       });
     return this.saveQueue;
   }
@@ -297,7 +297,7 @@ export default class DayTaskPlugin extends Plugin {
     this.assignSeriesIds();
   }
 
-  private normalizeSettings(value: unknown): DayTaskSettings {
+  private normalizeSettings(value: unknown): AgendaPaneSettings {
     if (!value || typeof value !== "object") return { ...DEFAULT_SETTINGS };
     const settings = value as Record<string, unknown>;
     return {
@@ -308,7 +308,7 @@ export default class DayTaskPlugin extends Plugin {
     };
   }
 
-  private normalizeTask(value: unknown, index: number): DayTaskItem | null {
+  private normalizeTask(value: unknown, index: number): AgendaPaneItem | null {
     if (!value || typeof value !== "object") return null;
     const task = value as Record<string, unknown>;
     if (typeof task.title !== "string" || !task.title.trim() || !isDateKey(task.date)) return null;
@@ -349,7 +349,7 @@ export default class DayTaskPlugin extends Plugin {
     draft: TaskDraft,
     generatedFromId?: string,
     seriesId?: string,
-  ): DayTaskItem {
+  ): AgendaPaneItem {
     const now = Date.now();
     return {
       id: this.createTaskId(),
@@ -369,7 +369,7 @@ export default class DayTaskPlugin extends Plugin {
     };
   }
 
-  private taskToDraft(task: DayTaskItem): TaskDraft {
+  private taskToDraft(task: AgendaPaneItem): TaskDraft {
     return {
       title: task.title,
       date: task.date,
@@ -383,7 +383,7 @@ export default class DayTaskPlugin extends Plugin {
 
   private assignSeriesIds(): void {
     const byId = new Map(this.data.tasks.map((task) => [task.id, task]));
-    const findRootId = (task: DayTaskItem): string => {
+    const findRootId = (task: AgendaPaneItem): string => {
       if (task.seriesId) return task.seriesId;
       let current = task;
       const visited = new Set<string>();

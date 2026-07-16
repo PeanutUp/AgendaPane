@@ -6,7 +6,7 @@ const production = process.argv[2] === "production";
 
 const context = await esbuild.context({
   banner: {
-    js: "/* DayTask - Calendar tasks without daily notes */",
+    js: "/* AgendaPane - Calendar tasks without daily notes */",
   },
   entryPoints: ["main.ts"],
   bundle: true,

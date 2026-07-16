@@ -1,5 +1,5 @@
 import { ItemView, WorkspaceLeaf, setIcon } from "obsidian";
-import type DayTaskPlugin from "../main";
+import type AgendaPanePlugin from "../main";
 import {
   addDays,
   addMonths,
@@ -9,22 +9,22 @@ import {
   sameMonth,
 } from "./date-utils";
 import { getStrings } from "./i18n";
-import type { DayTaskItem } from "./types";
+import type { AgendaPaneItem } from "./types";
 
-export const VIEW_TYPE_DAYTASK = "daytask-calendar-view";
+export const VIEW_TYPE_AGENDA_PANE = "daytask-calendar-view";
 
-export class DayTaskView extends ItemView {
+export class AgendaPaneView extends ItemView {
   private selectedDate = formatDateKey(new Date());
   private visibleMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   private taskInput: HTMLInputElement | null = null;
   private draggedTaskId: string | null = null;
 
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: DayTaskPlugin) {
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: AgendaPanePlugin) {
     super(leaf);
   }
 
   getViewType(): string {
-    return VIEW_TYPE_DAYTASK;
+    return VIEW_TYPE_AGENDA_PANE;
   }
 
   getDisplayText(): string {
@@ -302,7 +302,7 @@ export class DayTaskView extends ItemView {
       .forEach((element) => element.removeClass("is-dragging", "drop-before", "drop-after"));
   }
 
-  private renderTaskMeta(parent: HTMLElement, task: DayTaskItem): void {
+  private renderTaskMeta(parent: HTMLElement, task: AgendaPaneItem): void {
     if (!task.startTime && !task.endTime) return;
 
     const meta = parent.createDiv({ cls: "daytask-task-meta" });

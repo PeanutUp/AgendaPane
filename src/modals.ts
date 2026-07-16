@@ -1,6 +1,6 @@
 import { App, Modal, Setting, setIcon } from "obsidian";
 import { addMonthsClamped, formatDateKey, isDateKey, parseDateKey } from "./date-utils";
-import { DayTaskStrings } from "./i18n";
+import { AgendaPaneStrings } from "./i18n";
 import {
   RecurrenceFrequency,
   RecurrenceUnit,
@@ -19,7 +19,7 @@ export class TaskModal extends Modal {
     app: App,
     draft: TaskDraft,
     private readonly mode: "create" | "edit",
-    private readonly strings: DayTaskStrings,
+    private readonly strings: AgendaPaneStrings,
     private readonly onSave: (draft: TaskDraft) => Promise<void>,
   ) {
     super(app);
