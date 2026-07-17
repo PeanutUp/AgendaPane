@@ -63,13 +63,20 @@ jobs:
           test -s manifest.json
           test -s styles.css
 
-      - name: Attest release assets
-        uses: actions/attest@v4
+      - name: Attest main.js
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
         with:
-          subject-path: |
-            main.js
-            manifest.json
-            styles.css
+          subject-path: main.js
+
+      - name: Attest manifest.json
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: manifest.json
+
+      - name: Attest styles.css
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: styles.css
 
       - name: Create or update GitHub release
         uses: softprops/action-gh-release@v3

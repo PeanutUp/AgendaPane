@@ -1,13 +1,15 @@
 import esbuild from "esbuild";
 import process from "process";
+import { readFile } from "node:fs/promises";
 import { builtinModules } from "node:module";
 
 const production = process.argv[2] === "production";
 const nodeBuiltins = [...builtinModules, ...builtinModules.map((name) => `node:${name}`)];
+const manifest = JSON.parse(await readFile(new URL("./manifest.json", import.meta.url), "utf8"));
 
 const context = await esbuild.context({
   banner: {
-    js: "/* AgendaPane - Calendar tasks without daily notes */",
+    js: `/* AgendaPane ${manifest.version} - Calendar tasks without daily notes */`,
   },
   entryPoints: ["main.ts"],
   bundle: true,

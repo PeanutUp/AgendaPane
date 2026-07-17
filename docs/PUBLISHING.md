@@ -10,7 +10,7 @@ Current release identity:
 - Plugin ID: `daytask`
 - Author: `PeanutUp`
 - Repository: `https://github.com/PeanutUp/AgendaPane`
-- Current release version: `1.1.1`
+- Current release version: `1.1.2`
 - Minimum Obsidian version: `1.7.2`
 - Description: `Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.`
 
@@ -79,8 +79,8 @@ git diff --check
 
 Confirm that:
 
-- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.1`.
-- `versions.json` contains `"1.1.1": "1.7.2"`.
+- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.2`.
+- `versions.json` contains `"1.1.2": "1.7.2"`.
 - `README.md`, `LICENSE`, and `manifest.json` are in the repository root.
 - Source files and the package lock are committed.
 - Production `main.js` is minified.
@@ -92,13 +92,13 @@ Commit and push the release source first. Then create and push the exact version
 
 ```bash
 git push origin main
-git tag 1.1.1
-git push origin 1.1.1
+git tag 1.1.2
+git push origin 1.1.2
 ```
 
-The **Release** workflow checks that the tag matches `manifest.json`, `package.json`, and `versions.json`; installs locked dependencies; builds the plugin; creates GitHub artifact attestations; and creates the release with `main.js`, `manifest.json`, and `styles.css`. Do not upload local copies manually.
+The **Release** workflow checks that the tag matches `manifest.json`, `package.json`, and `versions.json`; installs locked dependencies; builds the plugin; creates an independent GitHub build-provenance attestation for each release asset; and creates the release with `main.js`, `manifest.json`, and `styles.css`. Do not upload local copies manually.
 
-Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.1** and verify that all three assets can be downloaded separately and that the release shows artifact attestations.
+Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.2** and verify that all three assets can be downloaded separately and that the release shows artifact attestations.
 
 ## 6. Run a public beta
 
@@ -113,7 +113,7 @@ Before official submission, ask testers to install the repository through BRAT. 
 5. Accept the developer policies and maintenance confirmation.
 6. Address automated review feedback.
 
-For this review correction, publish `1.1.1`, wait for the Release workflow to pass, and then re-run the automated review. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
+For this attestation compatibility correction, publish `1.1.2`, wait for the Release workflow to pass, and then re-run the automated review. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
 
 Official references:
 

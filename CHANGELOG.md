@@ -2,6 +2,14 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-07-17
+
+### Fixed
+
+- Generate an independent build-provenance attestation for each required release asset
+- Pin the attestation action to the immutable `v4.1.0` commit for verifier compatibility
+- Add release-version markers to generated JavaScript and CSS so each release has unique asset digests
+
 ## [1.1.1] - 2026-07-17
 
 ### Fixed
@@ -54,6 +62,7 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not create or modify Markdown notes
 - AgendaPane does not access the network, collect telemetry, or require an account
 
+[1.1.2]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.2
 [1.1.1]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.1
 [1.1.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.0
 [1.0.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.0.0
