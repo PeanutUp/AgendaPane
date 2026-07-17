@@ -108,7 +108,7 @@ npm run build
 
 ## 兼容性
 
-- Obsidian 1.5.0 或更高版本
+- Obsidian 1.7.2 或更高版本
 - 清单声明支持桌面端和移动端
 - 拖动任务排序取决于设备对拖放操作的支持
 - AgendaPane 使用独立的右侧栏页签，不会替换 Calendar 或其他类似日历视图
@@ -121,7 +121,7 @@ npm install
 npm run dev
 ```
 
-正式构建请使用 `npm run build`。GitHub Release 的标签必须与 `manifest.json` 中的版本完全相同，不能添加 `v` 前缀；每个 Release 都需要上传 `main.js`、`manifest.json` 和 `styles.css`。
+正式构建请使用 `npm run build`。GitHub Release 的标签必须与 `manifest.json` 中的版本完全相同，不能添加 `v` 前缀。推送匹配的版本标签后，发布工作流会自动构建、生成证明并上传 `main.js`、`manifest.json` 和 `styles.css`。
 
 ## 反馈与支持
 

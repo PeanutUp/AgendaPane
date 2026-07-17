@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const manifest = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+          const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          const versions = JSON.parse(fs.readFileSync("versions.json", "utf8"));
+          const tag = process.env.RELEASE_TAG;
+
+          if (tag !== manifest.version || tag !== packageJson.version) {
+            throw new Error(
+              `Tag ${tag} must match manifest/package version ${manifest.version}/${packageJson.version}`,
+            );
+          }
+          if (versions[tag] !== manifest.minAppVersion) {
+            throw new Error(
+              `versions.json must map ${tag} to ${manifest.minAppVersion}`,
+            );
+          }
+          NODE
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify release assets
+        run: |
+          test -s main.js
+          test -s manifest.json
+          test -s styles.css
+
+      - name: Attest release assets
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
+      - name: Create or update GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            main.js
+            manifest.json
+            styles.css
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          generate_release_notes: true

@@ -108,7 +108,7 @@ Copy `main.js`, `manifest.json`, and `styles.css` into `<your-vault>/.obsidian/p
 
 ## Compatibility
 
-- Obsidian 1.5.0 or newer
+- Obsidian 1.7.2 or newer
 - Desktop and mobile are declared supported
 - Drag-and-drop task reordering depends on the platform's drag support
 - AgendaPane opens in its own right-sidebar leaf and does not replace Calendar or similar calendar views
@@ -121,7 +121,7 @@ npm install
 npm run dev
 ```
 
-Use `npm run build` for a production build. Release tags must exactly match the version in `manifest.json` and must not include a `v` prefix. Attach `main.js`, `manifest.json`, and `styles.css` to every GitHub release.
+Use `npm run build` for a production build. Release tags must exactly match the version in `manifest.json` and must not include a `v` prefix. Pushing a matching version tag runs the release workflow, which builds, attests, and uploads `main.js`, `manifest.json`, and `styles.css`.
 
 ## Support
 

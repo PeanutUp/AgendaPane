@@ -2,10 +2,15 @@ import type { RecurrenceRule } from "./types";
 
 const DATE_KEY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 
+export function zeroPad(value: string | number, width: number): string {
+  const text = String(value);
+  return text.length >= width ? text : `${"0".repeat(width - text.length)}${text}`;
+}
+
 export function formatDateKey(date: Date): string {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const month = zeroPad(date.getMonth() + 1, 2);
+  const day = zeroPad(date.getDate(), 2);
   return `${year}-${month}-${day}`;
 }
 

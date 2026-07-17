@@ -61,6 +61,16 @@ export class AgendaPaneView extends ItemView {
     this.taskInput?.focus();
   }
 
+  private async submitQuickTask(): Promise<void> {
+    const title = this.taskInput?.value.trim() ?? "";
+    if (!title) {
+      this.taskInput?.focus();
+      return;
+    }
+    await this.plugin.addTask(title, this.selectedDate);
+    this.focusTaskInput();
+  }
+
   selectToday(): void {
     const today = new Date();
     this.selectedDate = formatDateKey(today);
@@ -236,15 +246,9 @@ export class AgendaPaneView extends ItemView {
     });
     setIcon(advancedButton, "settings-2");
     advancedButton.addEventListener("click", () => this.plugin.openCreateModal(this.selectedDate));
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", (event) => {
       event.preventDefault();
-      const title = this.taskInput?.value.trim() ?? "";
-      if (!title) {
-        this.taskInput?.focus();
-        return;
-      }
-      await this.plugin.addTask(title, this.selectedDate);
-      this.focusTaskInput();
+      void this.submitQuickTask();
     });
 
     if (tasks.length === 0) {

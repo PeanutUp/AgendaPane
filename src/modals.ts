@@ -1,5 +1,5 @@
 import { App, Modal, Setting, setIcon } from "obsidian";
-import { addMonthsClamped, formatDateKey, isDateKey, parseDateKey } from "./date-utils";
+import { addMonthsClamped, formatDateKey, isDateKey, parseDateKey, zeroPad } from "./date-utils";
 import { AgendaPaneStrings } from "./i18n";
 import {
   RecurrenceFrequency,
@@ -296,7 +296,7 @@ export class TaskModal extends Modal {
     };
 
     const updateCustomDate = (): void => {
-      const candidate = `${yearInput.value.padStart(4, "0")}-${monthInput.value.padStart(2, "0")}-${dayInput.value.padStart(2, "0")}`;
+      const candidate = `${zeroPad(yearInput.value, 4)}-${zeroPad(monthInput.value, 2)}-${zeroPad(dayInput.value, 2)}`;
       const valid = isDateKey(candidate) && candidate >= this.draft.date;
       this.customRecurrenceEndActive = true;
       this.customRecurrenceEndValid = valid;
@@ -352,7 +352,7 @@ export class TaskModal extends Modal {
 
   private updateChoiceSelection(group: HTMLElement, value: string): void {
     group.querySelectorAll("button").forEach((element) => {
-      const button = element as HTMLButtonElement;
+      const button = element;
       const selected = button.dataset.value === value;
       button.toggleClass("is-selected", selected);
       button.setAttr("aria-pressed", String(selected));
@@ -378,7 +378,7 @@ export class TaskModal extends Modal {
       this.strings.startTime,
       this.draft.startTime,
       (value) => {
-      this.draft.startTime = value;
+        this.draft.startTime = value;
       },
     );
     const separator = range.createSpan({ cls: "daytask-time-separator" });
@@ -484,7 +484,7 @@ export class TaskModal extends Modal {
     const candidate = /^\d{4}$/.test(digits)
       ? `${digits.slice(0, 2)}:${digits.slice(2)}`
       : shortMatch
-        ? `${shortMatch[1].padStart(2, "0")}:${shortMatch[2]}`
+        ? `${zeroPad(shortMatch[1], 2)}:${shortMatch[2]}`
         : trimmed;
     return /^([01]\d|2[0-3]):[0-5]\d$/.test(candidate) ? candidate : "";
   }
@@ -492,6 +492,6 @@ export class TaskModal extends Modal {
   private addMinutes(time: string, minutes: number): string {
     const [hours, mins] = time.split(":").map(Number);
     const total = Math.min(hours * 60 + mins + minutes, 23 * 60 + 59);
-    return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+    return `${zeroPad(Math.floor(total / 60), 2)}:${zeroPad(total % 60, 2)}`;
   }
 }

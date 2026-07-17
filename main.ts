@@ -34,7 +34,7 @@ export default class AgendaPanePlugin extends Plugin {
     });
 
     this.addCommand({
-      id: "open-daytask",
+      id: "open-sidebar",
       name: strings.open,
       callback: () => void this.activateView(),
     });
@@ -63,26 +63,17 @@ export default class AgendaPanePlugin extends Plugin {
     else this.app.workspace.onLayoutReady(initializeWorkspace);
   }
 
-  async onunload(): Promise<void> {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_AGENDA_PANE);
-    await this.saveQueue;
-  }
-
   async activateView(): Promise<AgendaPaneView | null> {
     let leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_AGENDA_PANE)[0];
     if (!leaf) {
-      if (typeof this.app.workspace.ensureSideLeaf === "function") {
-        leaf = await this.app.workspace.ensureSideLeaf(VIEW_TYPE_AGENDA_PANE, "right", {
-          active: true,
-          split: false,
-          reveal: true,
-        });
-      } else {
-        leaf = this.app.workspace.getRightLeaf(true) ?? this.app.workspace.getLeaf(true);
-        await leaf.setViewState({ type: VIEW_TYPE_AGENDA_PANE, active: true });
-      }
+      leaf = await this.app.workspace.ensureSideLeaf(VIEW_TYPE_AGENDA_PANE, "right", {
+        active: true,
+        split: false,
+        reveal: true,
+      });
+    } else {
+      await this.app.workspace.revealLeaf(leaf);
     }
-    await this.app.workspace.revealLeaf(leaf);
     return leaf.view instanceof AgendaPaneView ? leaf.view : null;
   }
 
@@ -320,8 +311,13 @@ export default class AgendaPanePlugin extends Plugin {
 
     const record = raw as Record<string, unknown>;
     this.needsMigrationSave = record.schemaVersion !== 5;
-    const rawTasks = Array.isArray(record.tasks) ? record.tasks : [];
+    const rawTasks: unknown[] = Array.isArray(record.tasks) ? record.tasks : [];
     const settings = this.normalizeSettings(record.settings);
+    const tasks: AgendaPaneItem[] = [];
+    for (let index = 0; index < rawTasks.length; index += 1) {
+      const task = this.normalizeTask(rawTasks[index], index);
+      if (task) tasks.push(task);
+    }
 
     this.data = {
       schemaVersion: 5,
@@ -332,10 +328,7 @@ export default class AgendaPanePlugin extends Plugin {
       manualOrderDates: Array.isArray(record.manualOrderDates)
         ? record.manualOrderDates.filter((value): value is string => isDateKey(value))
         : [],
-      tasks: rawTasks.flatMap((candidate, index) => {
-        const task = this.normalizeTask(candidate, index);
-        return task ? [task] : [];
-      }),
+      tasks,
     };
     this.assignSeriesIds();
   }
@@ -448,11 +441,12 @@ export default class AgendaPanePlugin extends Plugin {
 
   private expandAllRecurringSeries(): boolean {
     const before = this.data.tasks.length;
-    const seriesIds = new Set(
-      this.data.tasks.flatMap((task) =>
-        task.seriesId && task.recurrence.frequency !== "none" ? [task.seriesId] : [],
-      ),
-    );
+    const seriesIds = new Set<string>();
+    for (const task of this.data.tasks) {
+      if (task.seriesId && task.recurrence.frequency !== "none") {
+        seriesIds.add(task.seriesId);
+      }
+    }
     for (const seriesId of seriesIds) this.expandRecurringSeries(seriesId);
     return this.data.tasks.length !== before;
   }

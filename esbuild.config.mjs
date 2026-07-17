@@ -1,8 +1,9 @@
 import esbuild from "esbuild";
 import process from "process";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 
 const production = process.argv[2] === "production";
+const nodeBuiltins = [...builtinModules, ...builtinModules.map((name) => `node:${name}`)];
 
 const context = await esbuild.context({
   banner: {
@@ -10,7 +11,7 @@ const context = await esbuild.context({
   },
   entryPoints: ["main.ts"],
   bundle: true,
-  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*", ...builtins],
+  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*", ...nodeBuiltins],
   format: "cjs",
   target: "es2018",
   logLevel: "info",

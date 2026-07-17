@@ -1,11 +1,12 @@
 {
   "name": "agenda-pane",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.",
   "private": true,
   "scripts": {
     "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "lint": "eslint ."
   },
   "keywords": [
     "obsidian",
@@ -14,10 +15,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^22.10.2",
-    "builtin-modules": "^4.0.0",
     "esbuild": "^0.28.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-obsidianmd": "^0.4.0",
+    "globals": "^17.6.0",
+    "jiti": "^2.6.1",
     "obsidian": "latest",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.59.1"
   }
 }

@@ -2,6 +2,20 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-07-17
+
+### Fixed
+
+- Preserve the AgendaPane leaf and its user-selected location when the plugin is disabled or reloaded
+- Declare Obsidian 1.7.2 as the minimum supported version to match the sidebar APIs in use
+- Remove unsafe task-data and recurrence-series type inference reported by the Community review
+- Use void event callbacks where Obsidian and browser APIs require them
+- Replace the deprecated `builtin-modules` development dependency
+
+### Release
+
+- Build, attest, and upload `main.js`, `manifest.json`, and `styles.css` automatically for version tags
+
 ## [1.1.0] - 2026-07-17
 
 ### Added
@@ -40,5 +54,6 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not create or modify Markdown notes
 - AgendaPane does not access the network, collect telemetry, or require an account
 
+[1.1.1]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.1
 [1.1.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.0
 [1.0.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.0.0
