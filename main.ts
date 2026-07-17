@@ -71,8 +71,16 @@ export default class AgendaPanePlugin extends Plugin {
   async activateView(): Promise<AgendaPaneView | null> {
     let leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_AGENDA_PANE)[0];
     if (!leaf) {
-      leaf = this.app.workspace.getRightLeaf(false) ?? this.app.workspace.getLeaf(true);
-      await leaf.setViewState({ type: VIEW_TYPE_AGENDA_PANE, active: true });
+      if (typeof this.app.workspace.ensureSideLeaf === "function") {
+        leaf = await this.app.workspace.ensureSideLeaf(VIEW_TYPE_AGENDA_PANE, "right", {
+          active: true,
+          split: false,
+          reveal: true,
+        });
+      } else {
+        leaf = this.app.workspace.getRightLeaf(true) ?? this.app.workspace.getLeaf(true);
+        await leaf.setViewState({ type: VIEW_TYPE_AGENDA_PANE, active: true });
+      }
     }
     await this.app.workspace.revealLeaf(leaf);
     return leaf.view instanceof AgendaPaneView ? leaf.view : null;
@@ -126,6 +134,41 @@ export default class AgendaPanePlugin extends Plugin {
     }
     await this.persistData();
     this.refreshViews();
+  }
+
+  async moveTask(id: string, targetDate: string): Promise<boolean> {
+    if (!isDateKey(targetDate)) return false;
+    const task = this.data.tasks.find((candidate) => candidate.id === id);
+    if (!task || task.date === targetDate) return false;
+
+    const sourceDate = task.date;
+    const targetOrder = this.nextOrderForDate(targetDate);
+    if (task.seriesId) {
+      const seriesId = task.seriesId;
+      const key = this.occurrenceKey(seriesId, sourceDate);
+      if (!this.data.excludedOccurrences.includes(key)) {
+        this.data.excludedOccurrences.push(key);
+      }
+      // Keep the detached occurrence from reusing the original series identity.
+      if (task.id === seriesId) task.id = this.createTaskId();
+      task.recurrence = { ...DEFAULT_RECURRENCE };
+      delete task.seriesId;
+      delete task.generatedFromId;
+    }
+
+    task.date = targetDate;
+    task.order = targetOrder;
+    task.updatedAt = Date.now();
+
+    if (!this.data.tasks.some((candidate) => candidate.date === sourceDate)) {
+      this.data.manualOrderDates = this.data.manualOrderDates.filter(
+        (date) => date !== sourceDate,
+      );
+    }
+
+    await this.persistData();
+    this.refreshViews();
+    return true;
   }
 
   async addTask(title: string, date: string): Promise<void> {

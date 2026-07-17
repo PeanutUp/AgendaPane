@@ -1,6 +1,6 @@
 {
   "name": "agenda-pane",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.",
   "private": true,
   "scripts": {

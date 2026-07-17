@@ -18,6 +18,8 @@ export class AgendaPaneView extends ItemView {
   private visibleMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   private taskInput: HTMLInputElement | null = null;
   private draggedTaskId: string | null = null;
+  private movingTask: { id: string; title: string } | null = null;
+  private moveFocusDate: string | null = null;
 
   constructor(leaf: WorkspaceLeaf, private readonly plugin: AgendaPanePlugin) {
     super(leaf);
@@ -41,6 +43,8 @@ export class AgendaPaneView extends ItemView {
 
   async onClose(): Promise<void> {
     this.taskInput = null;
+    this.movingTask = null;
+    this.moveFocusDate = null;
   }
 
   render(): void {
@@ -96,8 +100,25 @@ export class AgendaPaneView extends ItemView {
       this.render();
     });
 
+    if (this.movingTask) {
+      const moveBanner = section.createDiv({ cls: "daytask-move-banner" });
+      moveBanner.createSpan({
+        cls: "daytask-move-banner-text",
+        text: `${strings.moveTaskPrompt} “${this.movingTask.title}”`,
+      });
+      const cancelMove = this.createIconButton(moveBanner, "x", strings.cancelMove);
+      cancelMove.addClass("daytask-move-cancel");
+      cancelMove.addEventListener("click", () => this.cancelTaskMove());
+    }
+
     const grid = section.createDiv({ cls: "daytask-grid" });
     grid.setAttr("role", "grid");
+    grid.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && this.movingTask) {
+        event.preventDefault();
+        this.cancelTaskMove();
+      }
+    });
     const mondayFirst = this.plugin.data.settings.weekStartsOnMonday;
     this.getWeekdayLabels(mondayFirst).forEach((label) => {
       grid.createDiv({ cls: "daytask-weekday", text: label });
@@ -108,9 +129,14 @@ export class AgendaPaneView extends ItemView {
     const selectedIsVisible = calendarDates.some(
       (date) => formatDateKey(date) === this.selectedDate,
     );
-    const keyboardFocusDate = selectedIsVisible
-      ? this.selectedDate
-      : formatDateKey(new Date(this.visibleMonth.getFullYear(), this.visibleMonth.getMonth(), 1));
+    const moveFocusIsVisible =
+      this.moveFocusDate !== null &&
+      calendarDates.some((date) => formatDateKey(date) === this.moveFocusDate);
+    const keyboardFocusDate = this.movingTask && moveFocusIsVisible
+      ? this.moveFocusDate!
+      : selectedIsVisible
+        ? this.selectedDate
+        : formatDateKey(new Date(this.visibleMonth.getFullYear(), this.visibleMonth.getMonth(), 1));
     for (const date of calendarDates) {
       const dateKey = formatDateKey(date);
       const dayButton = grid.createEl("button", {
@@ -126,11 +152,21 @@ export class AgendaPaneView extends ItemView {
       dayButton.toggleClass("is-outside-month", !sameMonth(date, this.visibleMonth));
       dayButton.toggleClass("is-today", dateKey === todayKey);
       dayButton.toggleClass("is-selected", dateKey === this.selectedDate);
+      dayButton.toggleClass(
+        "is-move-focus",
+        this.movingTask !== null && dateKey === this.moveFocusDate,
+      );
 
       dayButton.addEventListener("click", () => {
-        this.selectDate(date, true);
+        if (this.movingTask) void this.moveTaskToDate(date);
+        else this.selectDate(date, true);
       });
       dayButton.addEventListener("keydown", (event) => {
+        if (this.movingTask && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          void this.moveTaskToDate(date);
+          return;
+        }
         const offsets: Partial<Record<string, number>> = {
           ArrowLeft: -1,
           ArrowRight: 1,
@@ -140,7 +176,9 @@ export class AgendaPaneView extends ItemView {
         const offset = offsets[event.key];
         if (offset === undefined) return;
         event.preventDefault();
-        this.selectDate(addDays(date, offset), true);
+        const target = addDays(date, offset);
+        if (this.movingTask) this.focusMoveDate(target);
+        else this.selectDate(target, true);
       });
     }
   }
@@ -278,6 +316,9 @@ export class AgendaPaneView extends ItemView {
       }
 
       const actions = row.createDiv({ cls: "daytask-task-actions" });
+      const moveButton = this.createIconButton(actions, "calendar-days", strings.moveTask);
+      moveButton.addEventListener("click", () => this.startTaskMove(task));
+
       const editButton = this.createIconButton(actions, "pencil", strings.editTask);
       editButton.addEventListener("click", () => this.plugin.openEditModal(task));
 
@@ -300,6 +341,46 @@ export class AgendaPaneView extends ItemView {
     this.containerEl
       .querySelectorAll(".daytask-task-row")
       .forEach((element) => element.removeClass("is-dragging", "drop-before", "drop-after"));
+  }
+
+  private startTaskMove(task: AgendaPaneItem): void {
+    this.movingTask = { id: task.id, title: task.title };
+    this.moveFocusDate = task.date;
+    this.render();
+    this.focusCalendarButton(task.date);
+  }
+
+  private cancelTaskMove(): void {
+    this.movingTask = null;
+    this.moveFocusDate = null;
+    this.render();
+  }
+
+  private focusMoveDate(date: Date): void {
+    this.moveFocusDate = formatDateKey(date);
+    if (!sameMonth(date, this.visibleMonth)) {
+      this.visibleMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+    this.render();
+    this.focusCalendarButton(this.moveFocusDate);
+  }
+
+  private async moveTaskToDate(date: Date): Promise<void> {
+    const movingTask = this.movingTask;
+    if (!movingTask) return;
+    const targetDate = formatDateKey(date);
+    this.movingTask = null;
+    this.moveFocusDate = null;
+    await this.plugin.moveTask(movingTask.id, targetDate);
+    this.selectDate(date, true);
+  }
+
+  private focusCalendarButton(date: string): void {
+    window.setTimeout(() => {
+      this.containerEl
+        .querySelector<HTMLButtonElement>(`.daytask-day[data-date="${date}"]`)
+        ?.focus();
+    }, 0);
   }
 
   private renderTaskMeta(parent: HTMLElement, task: AgendaPaneItem): void {

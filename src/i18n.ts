@@ -10,6 +10,9 @@ export interface AgendaPaneStrings {
   advancedAdd: string;
   noTasks: string;
   editTask: string;
+  moveTask: string;
+  moveTaskPrompt: string;
+  cancelMove: string;
   deleteTask: string;
   cancel: string;
   save: string;
@@ -75,6 +78,9 @@ const EN: AgendaPaneStrings = {
   advancedAdd: "Add with details",
   noTasks: "Nothing planned",
   editTask: "Edit task",
+  moveTask: "Move to another date",
+  moveTaskPrompt: "Choose a new date for",
+  cancelMove: "Cancel move",
   deleteTask: "Delete task",
   cancel: "Cancel",
   save: "Save",
@@ -140,6 +146,9 @@ const ZH: AgendaPaneStrings = {
   advancedAdd: "添加详细任务",
   noTasks: "这一天还没有安排",
   editTask: "编辑任务",
+  moveTask: "移动到其他日期",
+  moveTaskPrompt: "选择新日期：",
+  cancelMove: "取消移动",
   deleteTask: "删除任务",
   cancel: "取消",
   save: "保存",

@@ -55,6 +55,31 @@
   gap: 2px;
 }
 
+.daytask-move-banner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 0 4px;
+  color: var(--interactive-accent);
+  font-size: var(--font-ui-smaller);
+}
+
+.daytask-move-banner-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.daytask-move-cancel.daytask-icon-button {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+}
+
 .daytask-header-today {
   height: 28px;
   padding: 2px 7px;
@@ -144,6 +169,14 @@
 
 .daytask-day.is-selected:hover {
   background: transparent !important;
+}
+
+.daytask-day.is-move-focus .daytask-day-number {
+  color: var(--interactive-accent);
+  font-weight: var(--font-bold);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .daytask-day.is-today:not(.is-selected) .daytask-day-number {

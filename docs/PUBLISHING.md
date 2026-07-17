@@ -10,7 +10,7 @@ Current release identity:
 - Plugin ID: `daytask`
 - Author: `PeanutUp`
 - Repository: `https://github.com/PeanutUp/AgendaPane`
-- Initial public version: `1.0.0`
+- Current public version: `1.1.0`
 - Minimum Obsidian version: `1.5.0`
 - Description: `Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.`
 
@@ -37,6 +37,7 @@ The local project folder may also be renamed, but its name does not affect Obsid
 
 - Test enabling and disabling the plugin in a clean vault.
 - Test creating, completing, reopening, editing, deleting, and manually reordering tasks.
+- Test moving one-off and recurring tasks within a month and across month boundaries.
 - Test daily, weekday, weekly, monthly, and custom recurrence across month boundaries and through a selected end date.
 - Confirm every newly selected recurrence type defaults to **No end**.
 - Confirm one-, three-, and six-month shortcuts use the task date as the start and include valid occurrences on the end date.
@@ -44,6 +45,8 @@ The local project folder may also be renamed, but its name does not affect Obsid
 - Confirm that removing recurrence keeps the current task and removes the other occurrences in its series.
 - Test time validation and tasks without a time.
 - Test arrow-key calendar navigation after clicking a date.
+- With Calendar and Daily Notes enabled, confirm AgendaPane opens in a separate sidebar leaf and Calendar dates still open or create daily notes.
+- Confirm AgendaPane itself never opens or creates a daily note.
 - Confirm no Markdown files are created or modified.
 - Confirm existing `data.json` survives an update.
 - Test both light and dark themes.
@@ -76,8 +79,8 @@ git diff --check
 
 Confirm that:
 
-- `manifest.json`, `package.json`, and `package-lock.json` use version `1.0.0`.
-- `versions.json` contains `"1.0.0": "1.5.0"`.
+- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.0`.
+- `versions.json` contains `"1.1.0": "1.5.0"`.
 - `README.md`, `LICENSE`, and `manifest.json` are in the repository root.
 - Source files and the package lock are committed.
 - Production `main.js` is minified.
@@ -87,10 +90,10 @@ Confirm that:
 
 In GitHub, open **Releases → Draft a new release**.
 
-- Tag: `1.0.0` — do not use `v1.0.0`
+- Tag: `1.1.0` — do not use `v1.1.0`
 - Target: the default branch containing the matching manifest
-- Title: `AgendaPane 1.0.0`
-- Description: copy the `1.0.0` section from `CHANGELOG.md`
+- Title: `AgendaPane 1.1.0`
+- Description: copy the `1.1.0` section from `CHANGELOG.md`
 - Attach `main.js`
 - Attach `manifest.json`
 - Attach `styles.css`

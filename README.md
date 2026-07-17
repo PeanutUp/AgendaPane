@@ -16,7 +16,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 - Notes displayed directly beneath each task
 - Recurrence: daily, weekdays, weekly, monthly, or a custom interval
 - Every recurrence is open-ended by default, with optional duration or end-date controls
-- Complete, reopen, edit, reorder, and delete tasks directly
+- Complete, reopen, edit, move to another date, reorder, and delete tasks directly
 - Automatic ordering by time and then priority until a day is manually reordered
 - Arrow-key calendar navigation with automatic month changes
 - Monday-first or Sunday-first calendar
@@ -28,7 +28,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 1. Enable AgendaPane. It opens automatically in the right sidebar.
 2. Select a date in the calendar.
 3. Type into the quick-add field, or use the details button for time, priority, recurrence, and notes.
-4. Check a task to complete it, drag the task card to reorder it, or use its edit and delete actions.
+4. Check a task to complete it, drag the task card to reorder it, or use its move, edit, and delete actions.
 
 The task date always comes from the selected calendar day, so there is no second date picker in the task editor.
 
@@ -41,6 +41,12 @@ After clicking a calendar date, use:
 - `Enter` or `Space` to activate a focused date
 
 Moving beyond the current month automatically changes the visible month.
+
+## Moving tasks to another date
+
+Select the calendar icon on a task to enter move mode, then choose its new date in the existing compact calendar. You can also move through dates with the arrow keys and press `Enter` or `Space` to confirm; press `Escape` to cancel.
+
+Moving a recurring occurrence moves only that occurrence. The moved task becomes a one-off task, while the rest of the recurring series keeps its original schedule.
 
 ## Recurring tasks
 
@@ -105,6 +111,8 @@ Copy `main.js`, `manifest.json`, and `styles.css` into `<your-vault>/.obsidian/p
 - Obsidian 1.5.0 or newer
 - Desktop and mobile are declared supported
 - Drag-and-drop task reordering depends on the platform's drag support
+- AgendaPane opens in its own right-sidebar leaf and does not replace Calendar or similar calendar views
+- AgendaPane does not intercept external calendar clicks or open/create daily notes; Calendar and Daily Notes keep their native behavior
 
 ## Development
 
