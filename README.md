@@ -12,7 +12,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 - No generated daily notes and no changes to existing Markdown files
 - Quick task capture for the selected calendar day
 - Optional start and end times with quick duration controls
-- Four priority levels shown with subtle task background colors
+- Four priority levels shown with subtle backgrounds derived from the active Obsidian theme color
 - Notes displayed directly beneath each task
 - Recurrence: daily, weekdays, weekly, monthly, or a custom interval
 - Every recurrence is open-ended by default, with optional duration or end-date controls

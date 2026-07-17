@@ -9,6 +9,7 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - Move an existing task to another date through the compact calendar
 - Keyboard-accessible move mode with arrow-key navigation, confirmation, and cancellation
 - Moving a recurring occurrence affects only that occurrence and preserves the remaining series
+- Derive subtle priority backgrounds and priority-picker colors from the active Obsidian theme color
 
 ### Fixed
 

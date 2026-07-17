@@ -35,7 +35,7 @@ AgendaPane — calendar-first sidebar tasks without creating daily notes
 
 I built AgendaPane for a simple workflow: click a date, see its tasks immediately, and plan the day without generating daily notes or inserting task syntax into existing Markdown files.
 
-AgendaPane stays in the Obsidian sidebar and stores its data locally in the plugin's `data.json`. It supports optional time ranges, subtle priority colors, notes, daily/weekday/weekly/monthly/custom recurrence, moving tasks to another date, automatic sorting, and manual drag ordering. Recurrence is open-ended by default; one-, three-, and six-month durations and an inline custom end date are available when needed. The calendar can also be navigated with the arrow keys. AgendaPane uses its own sidebar leaf, so Calendar and Daily Notes keep their normal click behavior.
+AgendaPane stays in the Obsidian sidebar and stores its data locally in the plugin's `data.json`. It supports optional time ranges, subtle theme-aware priority colors, notes, daily/weekday/weekly/monthly/custom recurrence, moving tasks to another date, automatic sorting, and manual drag ordering. Recurrence is open-ended by default; one-, three-, and six-month durations and an inline custom end date are available when needed. The calendar can also be navigated with the arrow keys. AgendaPane uses its own sidebar leaf, so Calendar and Daily Notes keep their normal click behavior.
 
 The plugin does not read note contents, use the network, collect telemetry, or require an account.
 
@@ -53,7 +53,7 @@ I would especially appreciate feedback on mobile behavior, recurring tasks, keyb
 
 我想要的是一种很直接的使用方式：点击日历日期，下面马上显示当天任务；可以添加、完成、编辑、拖动排序或删除，但不会为了任务在仓库里生成很多 Markdown 文件。
 
-AgendaPane 默认显示在 Obsidian 右侧边栏，任务数据只保存在插件自己的 `data.json` 中。它支持开始与结束时间、浅色优先级、备注、每天/工作日/每周/每月/自定义循环，也可以把已有任务移动到其他日期，同时支持自动排序、手动拖动排序和方向键操作日历。循环默认不设截止，需要时可直接选择 1/3/6 个月，或在原位置填写自定义年月日。AgendaPane 使用独立侧边栏页签，因此 Calendar 和 Daily Notes 会继续保持原来的日期点击行为。
+AgendaPane 默认显示在 Obsidian 右侧边栏，任务数据只保存在插件自己的 `data.json` 中。它支持开始与结束时间、跟随 Obsidian 主题色的浅色优先级、备注、每天/工作日/每周/每月/自定义循环，也可以把已有任务移动到其他日期，同时支持自动排序、手动拖动排序和方向键操作日历。循环默认不设截止，需要时可直接选择 1/3/6 个月，或在原位置填写自定义年月日。AgendaPane 使用独立侧边栏页签，因此 Calendar 和 Daily Notes 会继续保持原来的日期点击行为。
 
 插件不会读取笔记正文，不连接网络，不收集使用数据，也不需要注册账号。
 

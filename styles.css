@@ -261,15 +261,15 @@
 }
 
 .daytask-task-row.is-priority-low {
-  background: color-mix(in srgb, #f9dce4 3%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 4%, var(--background-primary));
 }
 
 .daytask-task-row.is-priority-medium {
-  background: color-mix(in srgb, #f8c8d5 12%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 9%, var(--background-primary));
 }
 
 .daytask-task-row.is-priority-high {
-  background: color-mix(in srgb, #f4a9bd 22%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 16%, var(--background-primary));
 }
 
 .daytask-task-row:active {
@@ -293,15 +293,15 @@
 }
 
 .daytask-task-row.is-priority-low:hover {
-  background: color-mix(in srgb, #f9dce4 7%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 7%, var(--background-primary));
 }
 
 .daytask-task-row.is-priority-medium:hover {
-  background: color-mix(in srgb, #f8c8d5 17%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 13%, var(--background-primary));
 }
 
 .daytask-task-row.is-priority-high:hover {
-  background: color-mix(in srgb, #f4a9bd 27%, var(--background-primary));
+  background: color-mix(in srgb, var(--interactive-accent) 20%, var(--background-primary));
 }
 
 .daytask-task-content {
@@ -457,8 +457,8 @@
 }
 
 .daytask-priority-choice.is-selected {
-  border-color: color-mix(in srgb, #df829d 50%, var(--background-modifier-border));
-  background: color-mix(in srgb, #f4a9bd 12%, var(--background-primary));
+  border-color: color-mix(in srgb, var(--interactive-accent) 50%, var(--background-modifier-border));
+  background: color-mix(in srgb, var(--interactive-accent) 10%, var(--background-primary));
   color: var(--text-normal);
   font-weight: var(--font-medium);
 }
@@ -478,16 +478,16 @@
 }
 
 .daytask-priority-choice.is-low .daytask-priority-choice-dot {
-  border: 1px solid #e8c5cf;
-  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--interactive-accent) 35%, var(--background-modifier-border));
+  background: color-mix(in srgb, var(--interactive-accent) 18%, var(--background-primary));
 }
 
 .daytask-priority-choice.is-medium .daytask-priority-choice-dot {
-  background: #f3bdcb;
+  background: color-mix(in srgb, var(--interactive-accent) 48%, var(--background-primary));
 }
 
 .daytask-priority-choice.is-high .daytask-priority-choice-dot {
-  background: #df829d;
+  background: color-mix(in srgb, var(--interactive-accent) 82%, var(--background-primary));
 }
 
 .daytask-recurrence-picker,
