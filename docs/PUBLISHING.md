@@ -10,7 +10,7 @@ Current release identity:
 - Plugin ID: `daytask`
 - Author: `PeanutUp`
 - Repository: `https://github.com/PeanutUp/AgendaPane`
-- Current release version: `1.1.3`
+- Current release version: `1.1.4`
 - Minimum Obsidian version: `1.7.2`
 - Description: `Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.`
 
@@ -79,26 +79,28 @@ git diff --check
 
 Confirm that:
 
-- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.3`.
-- `versions.json` contains `"1.1.3": "1.7.2"`.
+- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.4`.
+- `versions.json` contains `"1.1.4": "1.7.2"`.
 - `README.md`, `LICENSE`, and `manifest.json` are in the repository root.
 - Source files and the package lock are committed.
 - Production `main.js` is minified.
 - `main.js` is not committed to the repository; the release workflow builds and attaches it instead.
 
-## 5. Create the attested GitHub release
+## 5. Create the GitHub release
 
 Commit and push the release source first. Then create and push the exact version tag; do not add a `v` prefix:
 
 ```bash
 git push origin main
-git tag 1.1.3
-git push origin 1.1.3
+git tag 1.1.4
+git push origin 1.1.4
 ```
 
-The **Release** workflow checks that the tag matches `manifest.json`, `package.json`, and `versions.json`; installs locked dependencies; builds the plugin; restores and verifies the name-based GitHub OIDC subject currently required by Obsidian; creates one GitHub build-provenance attestation covering all release assets; and creates the release with `main.js`, `manifest.json`, and `styles.css`. Do not upload local copies manually.
+The **Release** workflow checks that the tag matches `manifest.json`, `package.json`, and `versions.json`; installs locked dependencies; builds the plugin; and creates the release with `main.js`, `manifest.json`, and `styles.css`. Do not upload local copies manually.
 
-Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.3** and verify that all three assets can be downloaded separately and that the release shows artifact attestations.
+Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.4** and verify that all three assets can be downloaded separately.
+
+Artifact attestations are temporarily disabled. GitHub repositories created after July 15, 2026 use an immutable OIDC subject containing owner and repository IDs. The current Obsidian Community verifier rejects that valid format as a repository mismatch. A missing attestation is reported as a non-blocking recommendation, while an unrecognized valid attestation is reported as an error. Restore the attestation step when Obsidian supports immutable OIDC subjects.
 
 ## 6. Run a public beta
 
@@ -113,7 +115,7 @@ Before official submission, ask testers to install the repository through BRAT. 
 5. Accept the developer policies and maintenance confirmation.
 6. Address automated review feedback.
 
-For this attestation compatibility correction, publish `1.1.3`, wait for the Release workflow to pass, and then re-run the automated review. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
+For this attestation compatibility correction, publish `1.1.4`, wait for the Release workflow to pass, and then re-run the automated review. Expect a non-blocking recommendation about missing attestations rather than a cryptographic-verification error. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
 
 Official references:
 
@@ -123,4 +125,4 @@ Official references:
 
 ## 8. Future releases
 
-After the initial submission is accepted, do not submit the plugin again for ordinary updates. Increment the version in the repository, update `versions.json`, and push a matching tag. The workflow publishes the three attested assets, and Obsidian reads the latest compatible release through `manifest.json` and `versions.json`.
+After the initial submission is accepted, do not submit the plugin again for ordinary updates. Increment the version in the repository, update `versions.json`, and push a matching tag. The workflow publishes the three release assets, and Obsidian reads the latest compatible release through `manifest.json` and `versions.json`. Re-enable build-provenance attestations after Obsidian supports GitHub's immutable OIDC subject format.

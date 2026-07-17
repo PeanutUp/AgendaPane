@@ -121,7 +121,7 @@ npm install
 npm run dev
 ```
 
-Use `npm run build` for a production build. Release tags must exactly match the version in `manifest.json` and must not include a `v` prefix. Pushing a matching version tag runs the release workflow, which builds, attests, and uploads `main.js`, `manifest.json`, and `styles.css`.
+Use `npm run build` for a production build. Release tags must exactly match the version in `manifest.json` and must not include a `v` prefix. Pushing a matching version tag runs the release workflow, which builds and uploads `main.js`, `manifest.json`, and `styles.css`. Artifact attestations are temporarily paused because Obsidian's verifier does not yet recognize GitHub's immutable OIDC subject format for newly created repositories.
 
 ## Support
 

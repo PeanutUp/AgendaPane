@@ -121,7 +121,7 @@ npm install
 npm run dev
 ```
 
-正式构建请使用 `npm run build`。GitHub Release 的标签必须与 `manifest.json` 中的版本完全相同，不能添加 `v` 前缀。推送匹配的版本标签后，发布工作流会自动构建、生成证明并上传 `main.js`、`manifest.json` 和 `styles.css`。
+正式构建请使用 `npm run build`。GitHub Release 的标签必须与 `manifest.json` 中的版本完全相同，不能添加 `v` 前缀。推送匹配的版本标签后，发布工作流会自动构建并上传 `main.js`、`manifest.json` 和 `styles.css`。由于 Obsidian 的验证器尚未兼容 GitHub 为新仓库启用的不可变 OIDC 身份格式，构建证明暂时停用。
 
 ## 反馈与支持
 

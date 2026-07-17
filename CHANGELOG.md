@@ -2,13 +2,19 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.1.3] - 2026-07-17
+## [1.1.4] - 2026-07-17
 
-### Fixed
+### Release
 
-- Restore the name-based GitHub OIDC subject required by the current Obsidian Community verifier
-- Verify the OIDC subject prefix before signing so an incompatible release cannot be published
-- Generate one build-provenance attestation covering all three required release assets
+- Temporarily publish without GitHub artifact attestations because Obsidian's verifier does not yet recognize the immutable OIDC subject format required for repositories created after July 15, 2026
+- Keep unique JavaScript, manifest, and CSS digests so attestations can be restored cleanly after verifier support is available
+
+## [1.1.3] - 2026-07-17 (not released)
+
+### Release guard
+
+- Detect that GitHub issued an immutable, repository-ID-based OIDC subject that the current Obsidian verifier cannot match
+- Stop before signing or uploading assets, preventing another release with attestations that Obsidian would reject
 
 ## [1.1.2] - 2026-07-17
 
@@ -70,7 +76,8 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not create or modify Markdown notes
 - AgendaPane does not access the network, collect telemetry, or require an account
 
-[1.1.3]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.3
+[1.1.4]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.4
+[1.1.3]: https://github.com/PeanutUp/AgendaPane/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.2
 [1.1.1]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.1
 [1.1.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.0

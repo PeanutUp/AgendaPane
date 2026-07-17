@@ -12,9 +12,6 @@ concurrency:
 permissions:
   actions: write
   contents: write
-  id-token: write
-  attestations: write
-  artifact-metadata: write
 
 jobs:
   release:
@@ -64,7 +61,7 @@ jobs:
           test -s manifest.json
           test -s styles.css
 
-      - name: Use name-based OIDC subject for Obsidian compatibility
+      - name: Restore the repository default OIDC configuration
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -75,32 +72,7 @@ jobs:
             --header "Authorization: Bearer ${GH_TOKEN}" \
             --header "X-GitHub-Api-Version: 2026-03-10" \
             "https://api.github.com/repos/${REPOSITORY}/actions/oidc/customization/sub" \
-            --data '{"use_default":false,"include_claim_keys":["repo","context"],"use_immutable_subject":false}'
-
-          configuration="$(curl --fail-with-body --silent --show-error --location \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header "X-GitHub-Api-Version: 2026-03-10" \
-            "https://api.github.com/repos/${REPOSITORY}/actions/oidc/customization/sub")"
-
-          OIDC_CONFIGURATION="${configuration}" node <<'NODE'
-          const configuration = JSON.parse(process.env.OIDC_CONFIGURATION);
-          const expectedPrefix = `repo:${process.env.REPOSITORY}`;
-
-          if (configuration.sub_claim_prefix !== expectedPrefix) {
-            throw new Error(
-              `Expected OIDC subject prefix ${expectedPrefix}, received ${configuration.sub_claim_prefix}`,
-            );
-          }
-          NODE
-
-      - name: Attest release assets
-        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
-        with:
-          subject-path: |
-            main.js
-            manifest.json
-            styles.css
+            --data '{"use_default":true}'
 
       - name: Create or update GitHub release
         uses: softprops/action-gh-release@v3
