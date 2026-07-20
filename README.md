@@ -13,7 +13,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 - Quick task capture for the selected calendar day
 - Optional start and end times with quick duration controls
 - Four priority levels shown with subtle backgrounds derived from the active Obsidian theme color
-- Notes displayed directly beneath each task
+- Per-occurrence notes displayed directly beneath each task, without repeating across a recurring series
 - Recurrence: daily, weekdays, weekly, monthly, or a custom interval
 - Every recurrence is open-ended by default, with optional duration or end-date controls
 - Complete, reopen, edit, move to another date, reorder, and delete tasks directly
@@ -55,6 +55,8 @@ AgendaPane supports daily, weekday, weekly, monthly, and custom recurrence. Ever
 The compact repeat-period row uses the selected calendar date as the fixed start. It defaults to **No end** and also offers one-, three-, and six-month durations. Choose **Custom date** only when you need an exact year, month, and day. The custom fields expand inline, so no system calendar popover covers the rest of the editor. A matching occurrence on the end date is included.
 
 Occurrences are generated ahead for the coming year and the horizon is extended whenever the plugin loads. Removing recurrence from an occurrence keeps that task and removes the other occurrences in the series.
+
+Notes belong to individual occurrences. Writing or changing a note on one date does not copy it to the other tasks in the recurring series.
 
 ## Sorting and manual order
 

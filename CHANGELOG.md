@@ -2,6 +2,14 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.1.5] - 2026-07-20
+
+### Fixed
+
+- Keep notes scoped to the individual occurrence of a recurring task
+- Generate future recurring occurrences with empty notes instead of copying the previous occurrence's note
+- Preserve notes already written on other dates when shared recurring-task details are updated
+
 ## [1.1.4] - 2026-07-17
 
 ### Release
@@ -76,6 +84,7 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not create or modify Markdown notes
 - AgendaPane does not access the network, collect telemetry, or require an account
 
+[1.1.5]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.5
 [1.1.4]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.4
 [1.1.3]: https://github.com/PeanutUp/AgendaPane/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.2

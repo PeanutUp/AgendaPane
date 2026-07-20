@@ -198,17 +198,40 @@ export default class AgendaPanePlugin extends Plugin {
     if (!task || !draft.title.trim() || !isDateKey(draft.date)) return;
     const originalDate = task.date;
     const originalSeriesId = task.seriesId;
+    const title = draft.title.trim();
+    const startTime = this.normalizeTime(draft.startTime);
+    const endTime = this.normalizeTime(draft.endTime);
+    const priority = this.normalizePriority(draft.priority);
     const recurrenceChanged =
       task.date !== draft.date ||
       task.recurrence.frequency !== draft.recurrence.frequency ||
       task.recurrence.interval !== draft.recurrence.interval ||
       task.recurrence.unit !== draft.recurrence.unit ||
       task.recurrence.untilDate !== draft.recurrence.untilDate;
-    task.title = draft.title.trim();
+    const sharedFieldsChanged =
+      task.title !== title ||
+      task.startTime !== startTime ||
+      task.endTime !== endTime ||
+      task.priority !== priority ||
+      recurrenceChanged;
+    const occurrenceNotes = new Map<string, string>();
+    if (originalSeriesId) {
+      for (const candidate of this.data.tasks) {
+        if (
+          candidate.id !== task.id &&
+          candidate.seriesId === originalSeriesId &&
+          candidate.notes
+        ) {
+          occurrenceNotes.set(candidate.date, candidate.notes);
+        }
+      }
+    }
+
+    task.title = title;
     task.date = draft.date;
-    task.startTime = this.normalizeTime(draft.startTime);
-    task.endTime = this.normalizeTime(draft.endTime);
-    task.priority = this.normalizePriority(draft.priority);
+    task.startTime = startTime;
+    task.endTime = endTime;
+    task.priority = priority;
     task.notes = draft.notes.trim();
     task.recurrence = this.normalizeRecurrence(
       recurrenceChanged ? { ...draft.recurrence, anchorDate: draft.date } : draft.recurrence,
@@ -223,7 +246,7 @@ export default class AgendaPanePlugin extends Plugin {
       this.data.excludedOccurrences = this.data.excludedOccurrences.filter(
         (key) => !key.startsWith(`${originalSeriesId}@`),
       );
-    } else if (originalSeriesId) {
+    } else if (originalSeriesId && sharedFieldsChanged) {
       this.data.tasks = this.data.tasks.filter(
         (candidate) =>
           candidate.id === task.id ||
@@ -241,7 +264,10 @@ export default class AgendaPanePlugin extends Plugin {
       delete task.generatedFromId;
     } else {
       task.seriesId = originalSeriesId ?? task.id;
-      this.expandRecurringSeries(task.seriesId);
+      if (!originalSeriesId || sharedFieldsChanged) {
+        this.expandRecurringSeries(task.seriesId);
+        this.restoreOccurrenceNotes(task.seriesId, task.id, occurrenceNotes);
+      }
     }
     await this.persistData();
     this.refreshViews();
@@ -479,13 +505,26 @@ export default class AgendaPanePlugin extends Plugin {
       if (excluded.has(this.occurrenceKey(seriesId, nextDate))) continue;
 
       const next = this.createTask(
-        { ...this.taskToDraft(template), date: nextDate },
+        { ...this.taskToDraft(template), date: nextDate, notes: "" },
         template.id,
         seriesId,
       );
       this.data.tasks.push(next);
       byDate.set(nextDate, next);
       template = next;
+    }
+  }
+
+  private restoreOccurrenceNotes(
+    seriesId: string,
+    editedTaskId: string,
+    notesByDate: ReadonlyMap<string, string>,
+  ): void {
+    if (notesByDate.size === 0) return;
+    for (const task of this.data.tasks) {
+      if (task.id === editedTaskId || task.seriesId !== seriesId) continue;
+      const notes = notesByDate.get(task.date);
+      if (notes !== undefined) task.notes = notes;
     }
   }
 

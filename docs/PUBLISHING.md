@@ -10,7 +10,7 @@ Current release identity:
 - Plugin ID: `daytask`
 - Author: `PeanutUp`
 - Repository: `https://github.com/PeanutUp/AgendaPane`
-- Current release version: `1.1.4`
+- Current release version: `1.1.5`
 - Minimum Obsidian version: `1.7.2`
 - Description: `Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.`
 
@@ -39,6 +39,7 @@ The local project folder may also be renamed, but its name does not affect Obsid
 - Test creating, completing, reopening, editing, deleting, and manually reordering tasks.
 - Test moving one-off and recurring tasks within a month and across month boundaries.
 - Test daily, weekday, weekly, monthly, and custom recurrence across month boundaries and through a selected end date.
+- Confirm a note added to one recurring occurrence appears only on that occurrence and survives edits to shared series details.
 - Confirm every newly selected recurrence type defaults to **No end**.
 - Confirm one-, three-, and six-month shortcuts use the task date as the start and include valid occurrences on the end date.
 - Confirm **Custom date** expands inline, validates year/month/day, and never opens a system calendar popover over the notes field.
@@ -79,8 +80,8 @@ git diff --check
 
 Confirm that:
 
-- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.4`.
-- `versions.json` contains `"1.1.4": "1.7.2"`.
+- `manifest.json`, `package.json`, and `package-lock.json` use version `1.1.5`.
+- `versions.json` contains `"1.1.5": "1.7.2"`.
 - `README.md`, `LICENSE`, and `manifest.json` are in the repository root.
 - Source files and the package lock are committed.
 - Production `main.js` is minified.
@@ -92,13 +93,13 @@ Commit and push the release source first. Then create and push the exact version
 
 ```bash
 git push origin main
-git tag 1.1.4
-git push origin 1.1.4
+git tag 1.1.5
+git push origin 1.1.5
 ```
 
 The **Release** workflow checks that the tag matches `manifest.json`, `package.json`, and `versions.json`; installs locked dependencies; builds the plugin; and creates the release with `main.js`, `manifest.json`, and `styles.css`. Do not upload local copies manually.
 
-Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.4** and verify that all three assets can be downloaded separately.
+Open **Actions → Release** and wait for the run to pass. Then open **Releases → AgendaPane 1.1.5** and verify that all three assets can be downloaded separately.
 
 Artifact attestations are temporarily disabled. GitHub repositories created after July 15, 2026 use an immutable OIDC subject containing owner and repository IDs. The current Obsidian Community verifier rejects that valid format as a repository mismatch. A missing attestation is reported as a non-blocking recommendation, while an unrecognized valid attestation is reported as an error. Restore the attestation step when Obsidian supports immutable OIDC subjects.
 
@@ -115,7 +116,7 @@ Before official submission, ask testers to install the repository through BRAT. 
 5. Accept the developer policies and maintenance confirmation.
 6. Address automated review feedback.
 
-For this attestation compatibility correction, publish `1.1.4`, wait for the Release workflow to pass, and then re-run the automated review. Expect a non-blocking recommendation about missing attestations rather than a cryptographic-verification error. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
+For this release, publish `1.1.5`, wait for the Release workflow to pass, and then re-run the automated review if needed. Expect a non-blocking recommendation about missing attestations rather than a cryptographic-verification error. If further review changes are required, increment the patch version, update `versions.json`, commit the fix, and push a new matching tag.
 
 Official references:
 

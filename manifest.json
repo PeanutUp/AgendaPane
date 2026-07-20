@@ -1,7 +1,7 @@
 {
   "id": "daytask",
   "name": "AgendaPane",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "minAppVersion": "1.7.2",
   "description": "Plan one-off and recurring tasks in a sidebar calendar without creating Markdown notes.",
   "author": "PeanutUp",
