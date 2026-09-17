@@ -22,9 +22,12 @@ export default class AgendaPanePlugin extends Plugin {
   data: AgendaPaneData = structuredClone(DEFAULT_DATA);
   private saveQueue: Promise<void> = Promise.resolve();
   private needsMigrationSave = false;
+  private dataFileMtime: number | null = null;
+  private reloadingSyncedData = false;
 
   async onload(): Promise<void> {
     await this.loadPluginData();
+    await this.rememberDataFileMtime();
 
     this.registerView(VIEW_TYPE_AGENDA_PANE, (leaf) => new AgendaPaneView(leaf, this));
 
@@ -50,6 +53,15 @@ export default class AgendaPanePlugin extends Plugin {
     });
 
     this.addSettingTab(new AgendaPaneSettingTab(this.app, this));
+
+    const reloadSyncedData = (): void => {
+      void this.reloadSyncedDataIfNeeded();
+    };
+    this.registerDomEvent(window, "focus", reloadSyncedData);
+    this.registerDomEvent(document, "visibilitychange", () => {
+      if (document.visibilityState === "visible") reloadSyncedData();
+    });
+    this.registerInterval(window.setInterval(reloadSyncedData, 10_000));
 
     const initializeWorkspace = (): void => {
       const expanded = this.expandAllRecurringSeries();
@@ -321,11 +333,41 @@ export default class AgendaPanePlugin extends Plugin {
     const snapshot = structuredClone(this.data);
     this.saveQueue = this.saveQueue
       .catch(() => undefined)
-      .then(() => this.saveData(snapshot))
+      .then(async () => {
+        await this.saveData(snapshot);
+        await this.rememberDataFileMtime();
+      })
       .catch((error: unknown) => {
         new Notice(`AgendaPane: ${error instanceof Error ? error.message : String(error)}`);
       });
     return this.saveQueue;
+  }
+
+  private async reloadSyncedDataIfNeeded(): Promise<void> {
+    if (this.reloadingSyncedData) return;
+    this.reloadingSyncedData = true;
+    try {
+      await this.saveQueue;
+      const stat = await this.app.vault.adapter.stat(this.dataFilePath());
+      if (!stat || stat.mtime === this.dataFileMtime) return;
+      const previous = JSON.stringify(this.data);
+      await this.loadPluginData();
+      this.dataFileMtime = stat.mtime;
+      if (JSON.stringify(this.data) !== previous) this.refreshViews();
+    } catch (error: unknown) {
+      console.error("AgendaPane: failed to reload synced data", error);
+    } finally {
+      this.reloadingSyncedData = false;
+    }
+  }
+
+  private dataFilePath(): string {
+    return `${this.manifest.dir ?? `.obsidian/plugins/${this.manifest.id}`}/data.json`;
+  }
+
+  private async rememberDataFileMtime(): Promise<void> {
+    const stat = await this.app.vault.adapter.stat(this.dataFilePath());
+    this.dataFileMtime = stat?.mtime ?? null;
   }
 
   private async loadPluginData(): Promise<void> {

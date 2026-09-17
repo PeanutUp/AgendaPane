@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, setIcon } from "obsidian";
+import { ItemView, Platform, WorkspaceLeaf, setIcon } from "obsidian";
 import type AgendaPanePlugin from "../main";
 import {
   addDays,
@@ -260,13 +260,13 @@ export class AgendaPaneView extends ItemView {
     }
 
     const list = section.createDiv({ cls: "daytask-task-list" });
-    for (const task of tasks) {
+    for (const [taskIndex, task] of tasks.entries()) {
       const row = list.createDiv({
         cls: `daytask-task-row is-priority-${task.priority}`,
       });
       row.dataset.taskId = task.id;
-      row.draggable = true;
-      row.setAttr("title", strings.reorderTask);
+      row.draggable = !Platform.isMobile;
+      if (!Platform.isMobile) row.setAttr("title", strings.reorderTask);
       row.toggleClass("is-completed", task.completed);
       row.addEventListener("dragstart", (event) => {
         this.draggedTaskId = task.id;
@@ -320,6 +320,27 @@ export class AgendaPaneView extends ItemView {
       }
 
       const actions = row.createDiv({ cls: "daytask-task-actions" });
+      if (Platform.isMobile) {
+        const moveUpButton = this.createIconButton(actions, "chevron-up", strings.moveTaskUp);
+        moveUpButton.addClass("daytask-mobile-reorder");
+        moveUpButton.disabled = taskIndex === 0;
+        moveUpButton.addEventListener("click", () => {
+          const target = tasks[taskIndex - 1];
+          if (target) void this.plugin.reorderTask(task.id, target.id, false);
+        });
+
+        const moveDownButton = this.createIconButton(
+          actions,
+          "chevron-down",
+          strings.moveTaskDown,
+        );
+        moveDownButton.addClass("daytask-mobile-reorder");
+        moveDownButton.disabled = taskIndex === tasks.length - 1;
+        moveDownButton.addEventListener("click", () => {
+          const target = tasks[taskIndex + 1];
+          if (target) void this.plugin.reorderTask(task.id, target.id, true);
+        });
+      }
       const moveButton = this.createIconButton(actions, "calendar-days", strings.moveTask);
       moveButton.addEventListener("click", () => this.startTaskMove(task));
 

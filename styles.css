@@ -1,4 +1,4 @@
-/* AgendaPane 1.1.5 */
+/* AgendaPane 1.2.0 */
 
 .daytask-view {
   --daytask-cell-height: 30px;
@@ -11,7 +11,7 @@
   width: 100%;
   min-width: 0;
   margin: 0;
-  padding: 6px 7px 16px;
+  padding: 6px 7px calc(16px + env(safe-area-inset-bottom, 0px));
 }
 
 .daytask-calendar,
@@ -383,6 +383,47 @@
   width: 26px;
   height: 26px;
   padding: 6px;
+}
+
+.daytask-task-actions .daytask-icon-button:disabled {
+  opacity: 0.3;
+}
+
+.is-mobile .daytask-task-actions {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .daytask-task-actions {
+    opacity: 1;
+  }
+}
+
+.is-mobile .daytask-task-row {
+  cursor: default;
+}
+
+.is-mobile .daytask-task-actions .daytask-icon-button {
+  width: 32px;
+  height: 36px;
+  padding: 7px;
+}
+
+@media (max-width: 480px) {
+  .daytask-shell {
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  .daytask-task-row {
+    gap: 5px;
+    padding-right: 2px;
+    padding-left: 5px;
+  }
+
+  .daytask-priority-picker {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .daytask-delete-button:hover {

@@ -2,6 +2,18 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-09-17
+
+### Added
+
+- Add touch-friendly up/down controls for reordering tasks in Obsidian Mobile
+- Reload task data when the app resumes, receives focus, or detects a synced `data.json` change
+- Add phone-sized layouts, always-visible task actions, safe-area spacing, and larger touch targets
+
+### Documentation
+
+- Document how to sync AgendaPane task data and plugin files to Obsidian on iOS and Android
+
 ## [1.1.5] - 2026-07-20
 
 ### Fixed
@@ -85,6 +97,7 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not access the network, collect telemetry, or require an account
 
 [1.1.5]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.5
+[1.2.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.2.0
 [1.1.4]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.4
 [1.1.3]: https://github.com/PeanutUp/AgendaPane/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.2

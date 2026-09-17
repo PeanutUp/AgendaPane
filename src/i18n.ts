@@ -64,6 +64,8 @@ export interface AgendaPaneStrings {
   incomplete: string;
   complete: string;
   reorderTask: string;
+  moveTaskUp: string;
+  moveTaskDown: string;
 }
 
 const EN: AgendaPaneStrings = {
@@ -132,6 +134,8 @@ const EN: AgendaPaneStrings = {
   incomplete: "Mark incomplete",
   complete: "Mark complete",
   reorderTask: "Drag to reorder",
+  moveTaskUp: "Move task up",
+  moveTaskDown: "Move task down",
 };
 
 const ZH: AgendaPaneStrings = {
@@ -200,6 +204,8 @@ const ZH: AgendaPaneStrings = {
   incomplete: "标记为未完成",
   complete: "标记为已完成",
   reorderTask: "拖动调整顺序",
+  moveTaskUp: "上移任务",
+  moveTaskDown: "下移任务",
 };
 
 export function getStrings(): AgendaPaneStrings {

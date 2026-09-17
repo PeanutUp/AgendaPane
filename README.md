@@ -22,6 +22,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 - Monday-first or Sunday-first calendar
 - English and Simplified Chinese interface
 - Local, per-vault storage with no account, telemetry, or cloud service
+- Mobile-friendly task controls and automatic refresh when synced task data changes
 
 ## How it works
 
@@ -80,7 +81,15 @@ The plugin uses Obsidian's `Plugin.loadData()` and `Plugin.saveData()` APIs. It 
 
 The folder remains named `daytask` because that is the plugin's persistent ID. Keeping the ID stable preserves existing task data, saved workspaces, and shortcuts while the display name changes to AgendaPane.
 
-If you use Obsidian on multiple devices, configure your sync solution to include the vault's `.obsidian` directory. Back up `data.json` if the task database is important to you.
+If you use Obsidian on multiple devices, configure your sync solution to include the vault's `.obsidian` directory. AgendaPane checks for a changed `data.json` when Obsidian returns to the foreground and every ten seconds while it is open, so edits synced from another device appear without restarting the plugin. Back up `data.json` if the task database is important to you.
+
+### Syncing to Obsidian Mobile
+
+- **Obsidian Sync:** enable **Vault configuration sync** and **Community plugins** for the same remote vault on desktop and mobile.
+- **iCloud (iPhone/iPad):** keep the vault inside the Obsidian iCloud Drive folder. The `.obsidian/plugins/daytask` folder and its `data.json` then travel with the vault.
+- **Other sync tools:** make sure hidden files and the complete `.obsidian/plugins/daytask` folder are included.
+
+After the first sync, open **Settings → Community plugins** on the phone and enable AgendaPane. Avoid editing the same task on two devices before the sync provider has finished; the provider, rather than AgendaPane, decides how simultaneous file conflicts are resolved.
 
 ## Installation
 
@@ -112,7 +121,7 @@ Copy `main.js`, `manifest.json`, and `styles.css` into `<your-vault>/.obsidian/p
 
 - Obsidian 1.7.2 or newer
 - Desktop and mobile are declared supported
-- Drag-and-drop task reordering depends on the platform's drag support
+- Desktop supports drag-and-drop ordering; mobile provides touch-friendly up/down controls
 - AgendaPane opens in its own right-sidebar leaf and does not replace Calendar or similar calendar views
 - AgendaPane does not intercept external calendar clicks or open/create daily notes; Calendar and Daily Notes keep their native behavior
 
