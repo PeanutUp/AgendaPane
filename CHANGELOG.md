@@ -2,6 +2,13 @@
 
 All notable changes to AgendaPane are documented in this file. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] - 2026-09-18
+
+### Changed
+
+- Let Obsidian restore AgendaPane's previous open or closed state on both desktop and mobile
+- Stop forcing the AgendaPane view open or closed during startup
+
 ## [1.2.1] - 2026-09-18
 
 ### Changed
@@ -103,6 +110,7 @@ All notable changes to AgendaPane are documented in this file. Versions follow [
 - AgendaPane does not create or modify Markdown notes
 - AgendaPane does not access the network, collect telemetry, or require an account
 
+[1.2.2]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.2.2
 [1.2.1]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.2.1
 [1.1.5]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.1.5
 [1.2.0]: https://github.com/PeanutUp/AgendaPane/releases/tag/1.2.0
