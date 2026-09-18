@@ -1,4 +1,4 @@
-import { Notice, Plugin } from "obsidian";
+import { Notice, Platform, Plugin } from "obsidian";
 import { addDays, formatDateKey, getNextOccurrence, isDateKey } from "./src/date-utils";
 import { getStrings } from "./src/i18n";
 import { TaskModal } from "./src/modals";
@@ -69,7 +69,11 @@ export default class AgendaPanePlugin extends Plugin {
         this.needsMigrationSave = false;
         void this.persistData();
       }
-      void this.activateView();
+      if (Platform.isMobile) {
+        this.app.workspace.detachLeavesOfType(VIEW_TYPE_AGENDA_PANE);
+      } else {
+        void this.activateView();
+      }
     };
     if (this.app.workspace.layoutReady) initializeWorkspace();
     else this.app.workspace.onLayoutReady(initializeWorkspace);

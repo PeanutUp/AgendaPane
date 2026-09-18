@@ -26,7 +26,7 @@ AgendaPane gives each day a focused task list beneath a compact monthly calendar
 
 ## How it works
 
-1. Enable AgendaPane. It opens automatically in the right sidebar.
+1. Enable AgendaPane. It opens automatically in the desktop right sidebar. On mobile, open it from the ribbon or command palette when needed.
 2. Select a date in the calendar.
 3. Type into the quick-add field, or use the details button for time, priority, recurrence, and notes.
 4. Check a task to complete it, drag the task card to reorder it, or use its move, edit, and delete actions.
@@ -121,6 +121,7 @@ Copy `main.js`, `manifest.json`, and `styles.css` into `<your-vault>/.obsidian/p
 
 - Obsidian 1.7.2 or newer
 - Desktop and mobile are declared supported
+- AgendaPane opens automatically on desktop but stays closed at mobile startup
 - Desktop supports drag-and-drop ordering; mobile provides touch-friendly up/down controls
 - AgendaPane opens in its own right-sidebar leaf and does not replace Calendar or similar calendar views
 - AgendaPane does not intercept external calendar clicks or open/create daily notes; Calendar and Daily Notes keep their native behavior
